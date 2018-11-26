@@ -1,0 +1,25 @@
+.NavBar{
+	display: block;
+	width: 100%;
+	position: fixed;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	font-size: 18px
+}
+
+.NavBar ol{
+	display: inline-block;
+	width: 100%;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color: brown;
+	padding: 10px 10px 10px 10px
+}
+
+.NavBar ol li{
+	display: inline-block;
+	float: left;
+	margin-left: 10px;
+}

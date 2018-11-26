@@ -1,0 +1,9 @@
+.CompButton{
+	font-size: 18px;
+	display: block;
+	background-color: forestgreen;
+	padding: 5px 10px 5px 10px;
+	border-radius: 3px;
+	margin: 0px 0px 0px 0px;
+
+}

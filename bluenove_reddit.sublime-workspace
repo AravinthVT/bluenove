@@ -1,0 +1,286 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"pa",
+				"padding-right\tproperty"
+			],
+			[
+				"pad",
+				"padding\tproperty"
+			],
+			[
+				"styl",
+				"outline-style\tproperty"
+			],
+			[
+				"data",
+				"dataObj"
+			],
+			[
+				"f",
+				"flex-grow\tproperty"
+			],
+			[
+				"ma",
+				"max-width\tproperty"
+			],
+			[
+				"mar",
+				"margin-top\tproperty"
+			],
+			[
+				"log",
+				"logo"
+			],
+			[
+				"image",
+				"imageUrl"
+			],
+			[
+				"get",
+				"getMenuItems"
+			],
+			[
+				"item",
+				"itemTags"
+			],
+			[
+				"fil",
+				"fill\tproperty"
+			],
+			[
+				"wid",
+				"width\tproperty"
+			],
+			[
+				"margin",
+				"margin-bottom\tproperty"
+			],
+			[
+				"inline",
+				"inline-block\tdisplay"
+			],
+			[
+				"in",
+				"inline-block\tdisplay"
+			],
+			[
+				"background-c",
+				"background-color\tproperty"
+			],
+			[
+				"wdi",
+				"width\tproperty"
+			],
+			[
+				"l",
+				"li\tTag"
+			],
+			[
+				"di",
+				"div\tTag"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"package con",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Install Package Control"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/NavMenuItem.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/SearchBar.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/serviceWorker.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/SearchBar.css",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/server.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/css/NavMenuItem.css",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/index.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/__server.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/package.json",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/HBar.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/css/HBox.css",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/index.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/containers/App.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/components/github/Corner.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/store/actions/productActions.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/components/shelf/Shelf.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/react_test/my-app/src/App.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/store/index.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/components/shelf/ShelfHeader.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/components/shelf/Product.js",
+		"/C/Aravinth/WORKING/GITHUB/React/react_samples/react_shopping_cart/react-shopping-cart/src/components/shelf/Filter.js",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/plain_html/index_html.css",
+		"/C/cygwin64/home/user/aravinthNodeJSProject/plain_html/index_html.html"
+	],
+	"find":
+	{
+		"height": 40.0
+	},
+	"find_in_files":
+	{
+		"height": 104.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"isRequired",
+			"8552515751438644_1"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 39.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 126.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "bluenove_reddit.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 289.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

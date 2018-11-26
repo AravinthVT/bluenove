@@ -1,0 +1,41 @@
+.DiscussionCreaterWidget{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.DiscussionCreaterWidget ol li{
+	padding-top: 10px;
+}
+
+.DiscussionCreaterWidget *{
+	font-size:18px;
+}
+
+.DiscussionCreaterWidget ol{
+	list-style: none;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.DiscussionCreaterWidgetRow{
+	list-style: none;
+	display: block;
+}
+
+.DiscussionCreaterWidgetRow li{
+	text-align: left;
+}
+
+.DiscussionCreaterWidgetTitleInput{
+	width: 100%;
+}
+
+.DiscussionCreaterWidgetContentInput{
+	width: 100%;
+	height: 200px;
+}
+
+.DiscussionCreaterWidgetSubmitBtn{
+	display:inline-block;
+	width: 80%;
+}

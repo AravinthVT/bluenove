@@ -1,0 +1,26 @@
+.CompVoter{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.CompVoter *{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.CompVoter ol{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	list-style: none;
+}
+
+.compVoter_value{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	color: #000000;
+}
+
+.compVoter_btn{
+	background-color: #232323;
+	color: #ff2323;
+}

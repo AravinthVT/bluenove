@@ -1,0 +1,8 @@
+.DiscussionCreatorPage{
+	padding-top: 60px;
+}
+
+.DiscussionCreatorPage div{
+	display: inline-block;
+	width: 95%;
+}

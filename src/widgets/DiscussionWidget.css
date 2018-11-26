@@ -1,0 +1,79 @@
+.DiscussionWidget{
+	display: inline-block;
+	float: left;
+	margin: 5px 10px 10px 10px;
+	width: 100%;
+}
+
+.discussionWidgetVoteContainer{
+	display: inline-block;
+	float: left;
+	height: 100%;
+	background-color: #ababab
+}
+
+.discussionWidgetCountContainer{
+	display: inline-block;
+	float: left;
+}
+
+
+
+
+
+.discussionWidgetInfoContainer{
+	display: flex;
+	height: 100%;
+	background-color: #ebebeb
+}
+
+.discussionWidgetInfoContainer *{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.discussionWidgetInfoContainer ol{
+	list-style: none;
+}
+
+.discussionWidgetInfoContainer ol li{
+	text-align: left;
+}
+
+
+.discussionWidgetInfoGroupContainer{
+	line-height: none;
+	display: inline-block;
+}
+
+.discussionWidgetInfoGroupContainer li{
+	display: inline-block;
+	margin-left: 10px;
+}
+
+
+
+
+
+
+.discussionWidgetInfoGroupTitle{
+	color: #333333;
+	font-size:16px;
+}
+
+.discussionWidgetInfoGroupUser{
+	color: #999999;
+	font-size:12px;
+}
+
+.discussionWidgetInfoGroupPostTime{
+	color: #999999;
+	font-size:12px;
+}
+
+
+
+.discussionWidgetContent{
+	color: #000000;
+	font-size:20px;	
+}
