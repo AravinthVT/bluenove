@@ -66,7 +66,6 @@ export class DiscussionWidget extends BaseComponent {
 					<div className="discussionWidgetCountContainer">
 		             	<CompVoter handleEvent={this.handleEvent}/>
 		             	<div style={{backgroundImage:lineSep}}>
-	              		aa
 	              		</div>
 	              	</div>
 	            </div>
@@ -79,8 +78,11 @@ export class DiscussionWidget extends BaseComponent {
 		            		<li className="discussionWidgetInfoGroupPostTime">{l_model.createdDate}</li>
 		            		</ol>
 		            	</li>
+		            	<li className="discussionWidgetTitle">
+		            	{l_model.title}
+		            	</li>
 		            	<li className="discussionWidgetContent">
-		            	{l_model.content}
+		            	{l_model.description}
 		            	</li>
 	            	</ol>
 	        	</div>

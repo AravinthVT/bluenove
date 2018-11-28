@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-//import "./CompPostDepth.css"
+import "./CompPostDepth.css"
 
 export class CompPostDepth extends Component {
 	constructor(props){
@@ -19,7 +19,7 @@ export class CompPostDepth extends Component {
 		var lineSeparators = []
 		//console.log("CompPostDepth:: generateSeparators:: this.props.level::"+this.props.level)
 		//console.log("CompPostDepth:: generateSeparators:: this.props.level::"+typeof(this.props.level))
-		let len = parseInt(this.props.level,10);
+		let len = parseInt(this.props.level, 10);
 		for(var i = 0; i<len; i++) {
 			console.log("i="+i)
 			lineSeparators.push(<li>:</li>);

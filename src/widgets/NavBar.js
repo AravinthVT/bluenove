@@ -23,9 +23,9 @@ class NavBar extends Component{
 		return (<div className="NavBar">
             <ol>
             <li>logo</li>
-            <li onClick={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE, value:"main"})}>main</li>
-            <li onClick={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE, value:"DiscussionPage"})}>discussion</li>
-            <li onClick={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE, value:"DiscussionCreatorPage"})}>discussion</li>
+            <li onClick={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE, value:"main"})}>Home</li>
+            <li onClick={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE, value:"DiscussionPage"})}>Discussion</li>
+            <li onClick={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE, value:"DiscussionCreatorPage"})}>Create-Discussion</li>
             <li><SearchBar/></li>
             <li>login signup</li>
             </ol>

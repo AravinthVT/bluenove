@@ -15,11 +15,30 @@ export class MainPage extends BaseComponent {
 			createdDate:"new Date()",
 			content:"default content from parent"
 		})}
+		this.fetchData = this.fetchData.bind(this);
+	}
 
+	componentDidMount(){
+		console.log("component mounted");
+		this.fetchData();
+	}
+
+	fetchData(){
+		fetch("http://localhost:3001/discussions").then((response)=>{
+			console.log("********************");
+			response.json().then((valueObj)=>{
+				console.log(valueObj);
+				console.log("valueObj.discussions")
+				console.log(valueObj.discussions)
+				this.setState({discussions:valueObj.discussions});
+			});
+
+		});
 	}
 	
 	render() {
-		const newObj=this.state.discussions[0]
+		//const newObj=this.state.discussions[0]
+		if(this.state.discussions == null) return null;
 		return (
 			<div className="MainPage">
 				<CompButton value="Create Post" handleEvent={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE,value:"DiscussionCreatorPage"})}/>
