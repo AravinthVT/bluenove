@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import "./CompVoter.css"
 import NumUtils from "../utils/NumUtils"
 import ComponentEvent from "../utils/ComponentEvent"
+import downArrow from "../images/downArrow.png"
 
 export class CompVoter extends Component {
 	constructor(props){
@@ -36,9 +37,9 @@ export class CompVoter extends Component {
 		return (
 			<div className="CompVoter">
 				<ol >
-					<li className="compVoter_btn" onClick={this.voteUp}>+</li>
+					<li className="compVoter_btn" onClick={this.voteUp}><img src={downArrow} style={{transform:"rotate(-90deg)",width:"30px"}}/></li>
 					<li className="compVoter_value">{NumUtils.getPrettyVoteValue(this.state.value)}</li>
-					<li className="compVoter_btn" onClick = {this.voteDown}>-</li>
+					<li className="compVoter_btn" onClick = {this.voteDown} ><img src={downArrow} style={{transform:"rotate(90deg)",width:"30px"}}/></li>
 				</ol>
 			</div>
 		);

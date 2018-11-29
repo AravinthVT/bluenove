@@ -21,39 +21,6 @@ MongoClient.connect(url, (err, client)=>{
 	console.log("db closed");
 })
 
-async function fetchHomePageDescription11(){
-	
-	let promise = new Promise((resolve, reject)=>{
-		MongoClient.connect(url, (err, client)=>{
-			console.log("\ndb connected");
-			console.log(err);
-			if(err) {
-				console.log("TODO: error accessing to me notified");
-				return;
-			}
-			let db = client.db("bluenove");
-			let cursor = db.collection("test").find()
-			let descriptions = cursor.toArray().then((value)=>{
-				console.log("array value array value");
-				console.log(value)
-				return value;
-			});
-			cursor.forEach((value)=>{
-				console.log("-- printing values ---");
-				console.log(value);	
-				descriptions.push(value);
-			})
-			client.close();
-			console.log("db closed");
-			console.log(descriptions);
-			resolve(descriptions);
-		})
-	})
-
-	let result=await promise;
-	console.log("return result");
-	return result
-}
 
 async function fetchHomePageDescription(res){
 	
@@ -67,22 +34,6 @@ async function fetchHomePageDescription(res){
 			}
 			let db = client.db("bluenove");
 			let cursor = db.collection("test").find()
-			/*let descriptions = cursor.toArray().then((value)=>{
-				console.log("array value array value");
-				console.log(value)
-			});
-			console.log("desciptions after to array");
-			console.log(descriptions);
-
-			cursor.forEach((value)=>{
-				console.log("-- printing values ---");
-				console.log(value);	
-				descriptions.push(value);
-			})*/
-			//client.close();
-			
-			//console.log(descriptions);
-			//resolve(descriptions);
 			resolve({cursor:cursor,client:client, res:res});
 		})
 	}).then((resolvedObj)=>{
@@ -103,6 +54,39 @@ async function fetchHomePageDescription(res){
 	return result
 }
 
+async function createNewDiscussion(res){
+	let promise = new Promise((resolve, reject)=>{
+		MongoClient.connect(url, (err, client)=>{
+			console.log("\ndb connected");
+			if(err) {
+				console.log("TODO: error accessing to me notified");
+				return;
+			}
+			let db = client.db("bluenove");
+			let cursor = db.collection("test").find()
+			resolve({cursor:cursor,client:client, res:res});
+		})
+	}).then((resolvedObj)=>{
+		let client1= resolvedObj.client
+		let resp = resolvedObj.res
+		resolvedObj.cursor.toArray().then((value)=>{
+				console.log("array value array value");
+				console.log(value)
+				client1.close();
+				resp.json({discussions:value})
+		});
+		//console.log("db closed");
+		//resolvedObj.client.close();
+	})
+
+	let result=await promise;
+	console.log("return result");
+	return result
+}
+
+
+//------------------------------- routes -------------------------
+
 app.get("/test",(req,res)=>{
 	res.send("hi there");
 })
@@ -119,12 +103,17 @@ app.get("/discussions",(req,res)=>{
 		visibility:"public"
 
 	}
-	//let obj={discussions:[discussion,discussion]}
 	let obj={discussions:null}
 	obj = fetchHomePageDescription(res);
-	//console.log("return from the method");
-	//res.json(obj);
 })
+
+app.get("/create-new-discussion/title/:title/description/:description",(req,res)=>{
+	console.log(req.params)
+	res.send("TODO to handle create new discussion on server");
+	createNewDiscussion(res);
+})
+
+
 
 app.listen(port,()=>{
 	console.log("server working connected");

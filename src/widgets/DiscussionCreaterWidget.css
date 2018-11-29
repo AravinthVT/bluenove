@@ -20,6 +20,7 @@
 .DiscussionCreaterWidgetRow{
 	list-style: none;
 	display: block;
+
 }
 
 .DiscussionCreaterWidgetRow li{
@@ -38,4 +39,14 @@
 .DiscussionCreaterWidgetSubmitBtn{
 	display:inline-block;
 	width: 80%;
+}
+
+
+.DiscussionCreaterWidgetError{
+    background-color: bisque;
+    border-radius:5px;
+    color:red;
+    font-size: 14px;
+    margin: 5px 0px 0px 0px;
+	padding: 5px 5px 5px 5px;
 }
