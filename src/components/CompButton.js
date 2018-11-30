@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import BaseComponent from "./BaseComponent"
 import ComponentEvent from "../utils/ComponentEvent"
 import "./CompButton.css"

@@ -21,6 +21,8 @@
 }
 
 .compVoter_btn{
-	background-color: #232323;
-	color: #ff2323;
+	/*background-color: #232323;*/
+	/*color: #ff2323;*/
+	user-select: none;
+	color: darkslategray
 }

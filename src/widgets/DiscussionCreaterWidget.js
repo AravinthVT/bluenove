@@ -2,11 +2,13 @@ import React from "react"
 import BaseComponent from "../components/BaseComponent"
 import CompButton from "../components/CompButton"
 import "./DiscussionCreaterWidget.css"
+import ModelEvents from "../models/ModelEvents"
+import ComponentEvent from "../utils/ComponentEvent"
 
 class DiscussionCreaterWidget extends BaseComponent{
 	constructor(props){
 		super(props);
-		props={controller:null};
+		//props={controller:null,mainModel:null};
 
 		this.state = {
 			title:"",
@@ -18,16 +20,25 @@ class DiscussionCreaterWidget extends BaseComponent{
 
 		}
 		this.updateInputValue 	= this.updateInputValue.bind(this)
+		this.updateContentValue = this.updateContentValue.bind(this)
 		this.isValidEntry		= this.isValidEntry.bind(this)
 		this.handleEvent = this.handleEvent.bind(this)
+	}
 
+	componentDidMount(){
+		console.log("componentDidMount this.props.mainModel"+this.props.mainModel);
 	}
 
 	handleEvent(aEvent){
 		console.log("event has been posted");
+		console.log("this.props.mainModel"+this.props.mainModel);
 		try{
-			if(this.isValidEntry()){
-				console.log("sent a querry to add a user to the model");
+			if(aEvent.event==ComponentEvent.CLICK){
+				if(this.isValidEntry()){
+					console.log("sent a querry to add a user to the model");
+					let obj={title:this.state.title, description:this.state.content};
+					this.props.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION,value:obj, target:this})
+				}
 			}
 		}catch(err){
 			switch(err.message){
@@ -48,7 +59,7 @@ class DiscussionCreaterWidget extends BaseComponent{
 	isValidEntry(){
 		console.log("is valid entry:"+this.state.title);
 		if(this.state.title.trim().length<=0){ throw new Error("empty_title")};
-		if(this.state.content==""){ throw new Error("empty_content")};
+		if(this.state.content.trim().length<=0){ throw new Error("empty_content")};
 		return true;
 	}
 
@@ -63,6 +74,8 @@ class DiscussionCreaterWidget extends BaseComponent{
 	}
 
 	updateContentValue(aEvent){
+		console.log("updating input value");
+		aEvent.preventDefault();
 		this.setState({
 			content:aEvent.target.value,
 			contentErrorMessage:null,
@@ -82,7 +95,7 @@ class DiscussionCreaterWidget extends BaseComponent{
 
 				<li>
 					<ol className="DiscussionCreaterWidgetRow">
-					<li>Content</li><li><textarea className="DiscussionCreaterWidgetContentInput" placeHolder="Content"/></li>
+					<li>Content</li><li><textarea className="DiscussionCreaterWidgetContentInput" placeHolder="Content" onChange={this.updateContentValue}/></li>
 					<li className="DiscussionCreaterWidgetError" style={{visibility:this.state.contentErrorMessageVisibility}}>{this.state.contentErrorMessage}</li>
 					</ol>
 				</li>

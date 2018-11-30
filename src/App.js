@@ -9,6 +9,11 @@ import DiscussionCreatorPage from "./pages/DiscussionCreatorPage"
 import ComponentEvent from "./utils/ComponentEvent"
 import MainModel from "./models/MainModel"
 import ModelEvents from "./models/ModelEvents"
+import bgImage from "./images/backgroundPattern2.jpg"
+import {Provider} from "react-redux"
+
+
+import store from "./store/store"
 
 class App extends Component {
   constructor(props){
@@ -18,6 +23,7 @@ class App extends Component {
   }
 
   componentDidMount(){
+    console.log("this.state.mainModel"+this.state.mainModel);
     var discussion = {
         about:"music",
         createdDate:"date date",
@@ -32,11 +38,11 @@ class App extends Component {
   getCurPage(){
     switch(this.state.currentScreen){
       case "main":
-        return (<MainPage handleEvent={this.handleEvent}/>)
+        return (<MainPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
       case "DiscussionPage":
-        return (<DiscussionPage handleEvent={this.handleEvent}/>)
+        return (<DiscussionPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
       case "DiscussionCreatorPage":
-        return (<DiscussionCreatorPage/>)
+        return (<DiscussionCreatorPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
       default:
         throw Error("unknow screen name "+this.state.currentScreen);
     }
@@ -54,12 +60,14 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <NavBar handleEvent={this.handleEvent}/>
-          {this.getCurPage()}
-        </header>
-      </div>
+      <Provider store={store}>
+        <div className="App">
+          <header className="App-header" style={{backgroundImage: `url(${bgImage})` ,backgroundRepeat: "repeat"}}>
+            <NavBar handleEvent={this.handleEvent}/>
+            {this.getCurPage()}
+          </header>
+        </div>
+      </Provider>
     );
   }
 }

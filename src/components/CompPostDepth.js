@@ -40,6 +40,7 @@ export class CompPostDepth extends Component {
 	}
 }
 
+
 CompPostDepth.propTypes={
 	level:PropTypes.number
 };

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from "prop-types"
 import ComponentEvent from "../utils/ComponentEvent"
 import "./DiscussionWidget.css"

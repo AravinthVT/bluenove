@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import DiscussionWidget from "../widgets/DiscussionWidget"
 import CompButton from "../components/CompButton"
 import BaseComponent from "../components/BaseComponent"
 import ComponentEvent from "../utils/ComponentEvent"
 import "./MainPage.css"
+import { connect } from 'react-redux'
+import { fetchPosts } from "../actions/postActions"
 
 export class MainPage extends BaseComponent {
 	constructor(props){
@@ -15,15 +17,16 @@ export class MainPage extends BaseComponent {
 			createdDate:"new Date()",
 			content:"default content from parent"
 		})}
-		this.fetchData = this.fetchData.bind(this);
+		//this.fetchData = this.fetchData.bind(this);
 	}
 
 	componentDidMount(){
 		console.log("component mounted");
-		this.fetchData();
+		//this.fetchData();
+		this.props.fetchPosts();
 	}
 
-	fetchData(){
+	/*fetchData(){
 		fetch("http://localhost:3001/discussions").then((response)=>{
 			console.log("********************");
 			response.json().then((valueObj)=>{
@@ -32,10 +35,11 @@ export class MainPage extends BaseComponent {
 				console.log(valueObj.discussions)
 				this.setState({discussions:valueObj.discussions});
 			});
-
 		});
-	}
+	}*/
+
 	
+	//this.state.discussions
 	render() {
 		//const newObj=this.state.discussions[0]
 		if(this.state.discussions == null) return null;
@@ -43,12 +47,16 @@ export class MainPage extends BaseComponent {
 			<div className="MainPage">
 				<CompButton value="Create Post" handleEvent={()=>this.handleEvent({event:ComponentEvent.SCREEN_CHANGE,value:"DiscussionCreatorPage"})}/>
 				<div>
-					{this.state.discussions.map((item)=>{
-						return <DiscussionWidget depth="0" model={item}/>
+					{this.props.discussions.map((item, index)=>{
+						return <DiscussionWidget key={index} depth="0" model={item}/>
 					})}
 				</div>
          	</div>
 		);
 	}
 }
-export default MainPage
+
+const mapStateToProps = state =>({
+		discussions: state.posts.items
+})
+export default connect(mapStateToProps, {fetchPosts})(MainPage)

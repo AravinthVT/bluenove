@@ -44,9 +44,13 @@ async function fetchHomePageDescription(res){
 				console.log(value)
 				client1.close();
 				resp.json({discussions:value})
+		}).catch((err)=>{
+			console.log("Error: fetchHomePageDescription could get the 'discussions'")	
 		});
 		//console.log("db closed");
 		//resolvedObj.client.close();
+	}).catch((err)=>{
+		console.log("Error: fetchHomePageDescription could not get the client object")
 	})
 
 	let result=await promise;
@@ -107,7 +111,7 @@ app.get("/discussions",(req,res)=>{
 	obj = fetchHomePageDescription(res);
 })
 
-app.get("/create-new-discussion/title/:title/description/:description",(req,res)=>{
+app.get("/create-new-discussion/userid/:userid/title/:title/description/:description",(req,res)=>{
 	console.log(req.params)
 	res.send("TODO to handle create new discussion on server");
 	createNewDiscussion(res);

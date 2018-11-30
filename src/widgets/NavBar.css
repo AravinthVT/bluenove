@@ -14,7 +14,7 @@
 	margin-bottom: 0px;
 	margin-left: 0px;
 	margin-right: 0px;
-	background-color: brown;
+	background-color: darkslategray;
 	padding: 10px 10px 10px 10px
 }
 
@@ -23,4 +23,5 @@
 	float: left;
 	margin-left: 10px;
 	margin-right: 10px;
+	user-select:none;
 }
