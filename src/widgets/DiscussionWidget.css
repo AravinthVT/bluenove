@@ -1,7 +1,7 @@
 .DiscussionWidget{
 	display: inline-block;
 	float: left;
-	margin: 5px 10px 10px 10px;
+	margin: 10px 0px 0px 0px;
 	width: 100%;
 }
 
@@ -9,7 +9,7 @@
 	display: inline-block;
 	float: left;
 	height: 100%;
-	background-color: #ababab
+	background-color: wheat;
 }
 
 .discussionWidgetCountContainer{
@@ -24,7 +24,7 @@
 .discussionWidgetInfoContainer{
 	display: flex;
 	height: 100%;
-	background-color: #ebebeb;
+	background-color: floralwhite;
 	overflow:hidden;
 }
 
@@ -50,7 +50,7 @@
 
 .discussionWidgetInfoGroupContainer li{
 	display: inline-block;
-	margin-left: 10px;
+	margin-left: 5px;
 }
 
 

@@ -4,5 +4,17 @@
 .SearchBar a{
 	color: white;
 	text-decoration-line: none;
-	background-color: #232323
+	background-color: darkcyan;
+	padding: 1px 10px 1px 10px;
+	margin: 0px 0px 0px 5px;
+	border-radius: 5px;
+}
+
+
+.SearchBar input{
+	color: black;
+	border-style: inherit;
+	border-radius: 5px;
+	height: 19px;
+	padding: 4px 10px 1px 10px;
 }

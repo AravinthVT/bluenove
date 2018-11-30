@@ -4,7 +4,7 @@
 	position: fixed;
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
-	font-size: 18px
+	font-size: 15px
 }
 
 .NavBar ol{
@@ -24,4 +24,16 @@
 	margin-left: 10px;
 	margin-right: 10px;
 	user-select:none;
+}
+
+.navBarMenu{
+	display: inline-block;
+	font-size: 15px;
+	color:white;
+}
+
+.navBarMenu :hover{
+	display: inline-block;
+	font-size: 15px;
+	color:orange;
 }

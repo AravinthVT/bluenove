@@ -6,7 +6,7 @@ const initialState = {
 }
 
 export default function(state=initialState, actions){
-	console.log("CHK: postReducer: reaches here 11");
+	console.log("CHK: postReducer: entry");
 	switch(actions.type){
 		case FETCH_POSTS:
 			console.log("CHK: postReducer: reaches here 22");

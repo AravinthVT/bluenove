@@ -11,6 +11,8 @@ import MainModel from "./models/MainModel"
 import ModelEvents from "./models/ModelEvents"
 import bgImage from "./images/backgroundPattern2.jpg"
 import {Provider} from "react-redux"
+import { connect } from 'react-redux'
+import PageLoader from "./widgets/PageLoader"
 
 
 import store from "./store/store"
@@ -35,7 +37,7 @@ class App extends Component {
     this.state.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION, value:discussion})
   }
 
-  getCurPage(){
+ /* getCurPage(){
     switch(this.state.currentScreen){
       case "main":
         return (<MainPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
@@ -46,7 +48,7 @@ class App extends Component {
       default:
         throw Error("unknow screen name "+this.state.currentScreen);
     }
-  }
+  }*/
 
   handleEvent(aEvent){
     switch(aEvent.event){
@@ -59,12 +61,15 @@ class App extends Component {
   }
 
   render() {
+    //{this.getCurPage()}
+    console.log("APP screen id ::"+this.props.currentScreenID);
     return (
       <Provider store={store}>
         <div className="App">
           <header className="App-header" style={{backgroundImage: `url(${bgImage})` ,backgroundRepeat: "repeat"}}>
             <NavBar handleEvent={this.handleEvent}/>
-            {this.getCurPage()}
+            <PageLoader/>
+            
           </header>
         </div>
       </Provider>
@@ -72,4 +77,9 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = state =>({
+    currentScreenID: state.screenIDs.screenID
+})
+
 export default App;
+//export default connect(mapStateToProps, {})(App)

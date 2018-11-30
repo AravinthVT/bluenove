@@ -1,9 +1,23 @@
 .CompButton{
 	font-size: 18px;
 	display: block;
-	background-color: forestgreen;
+	background-color: darkcyan;
 	padding: 5px 10px 5px 10px;
 	border-radius: 3px;
 	margin: 0px 0px 0px 0px;
+	color:white;
+	user-select: none;
+}
+
+.CompButton:hover{
+	font-size: 18px;
+	display: block;
+	background-color: darkkhaki;
+	padding: 5px 10px 5px 10px;
+	border-radius: 3px;
+	margin: 0px 0px 0px 0px;
+	color:darkolivegreen;
+	/*color:black;*/
+	user-select: none;
 
 }

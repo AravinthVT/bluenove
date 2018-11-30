@@ -48,7 +48,7 @@ export class MainModel extends Component {
 			console.log("status:"+response.status);
 			console.log("text  :"+response.text());
 			if(response.status== "200"){
-				alert("Successfully update the post");
+				//alert("Successfully update the post");
 			}
 		}).catch((err)=>{
 			console.log("Could not create the new discussion");
