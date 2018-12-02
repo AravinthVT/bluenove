@@ -16,7 +16,7 @@ class NavBar extends Component{
 		switch(aEvent.type){
 			case ComponentEvent.SCREEN_CHANGE:
 				//console.log("Nav bar SCREEN_CHANGE screenID:"+aEvent.value);
-				this.props.changeScreen(aEvent.value,{});
+				this.props.changeScreen(aEvent.value,{loginInfoObj:this.props.loginInfoObj});
 				break;
 			default:
 				throw Error("NavBar unknown type :"+NavBar);
@@ -44,7 +44,8 @@ const mapStateToProps = (state) =>{
 	console.log(state)
 		return {
 		discussions: state.posts.items,
-		screenContext: state.screenContext
+		screenContext: state.screenContext,
+		loginInfoObj:state.loginContext.loginInfoObj,
 	}
 }
 

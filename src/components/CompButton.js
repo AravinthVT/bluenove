@@ -6,12 +6,20 @@ import "./CompButton.css"
 export class CompButton extends BaseComponent {
 	constructor(props){
 		super(props);
-		props={value:""}
-		this.state={}
+		props={value:"", enabled:true}
+		this.state={enabled:true}
 	}
 	render() {
+		let compClass = "CompButton"
+		let l_enabled =true
+		let clickHandler = ()=>this.handleEvent({event:ComponentEvent.CLICK});
+		if(this.props.enabled===false){
+			 compClass = "CompButtonDisabled"
+			 l_enabled = false;
+			 clickHandler=null;
+		}
 		return (
-			<div className="CompButton" onClick={()=>this.handleEvent({event:ComponentEvent.CLICK})}>{this.props.value}</div>
+			<div className={compClass} onClick={clickHandler}>{this.props.value}</div>
 		);
 	}
 }

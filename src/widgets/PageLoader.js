@@ -7,7 +7,7 @@ import DiscussionPage from "../pages/DiscussionPage"
 import DiscussionCreatorPage from "../pages/DiscussionCreatorPage"
 import LoginPage from "../pages/LoginPage"
 
-import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN} from "../utils/ScreenIDs"
+import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN, SCREEN_ID_DISCUSSION} from "../utils/ScreenIDs"
 
 export class PageLoader extends Component {
 	constructor(props){
@@ -27,8 +27,8 @@ export class PageLoader extends Component {
 	    switch(this.props.currentScreenID){
 	      case SCREEN_ID_HOME:
 	        return (<MainPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
-	      case "DiscussionPage":
-	        return (<DiscussionPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
+	      case SCREEN_ID_DISCUSSION:
+	        return (<DiscussionPage handleEvent={this.handleEvent}/>)
 	      case SCREEN_ID_CREATE_NEW_DISCUSSION:
 	        return (<DiscussionCreatorPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
 	      case SCREEN_ID_LOGIN:

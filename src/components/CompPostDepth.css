@@ -2,4 +2,13 @@
 	margin:0px 0px 0px 0px;
 	padding:0px 0px 0px 0px; 
 	padding-inline-start:0px;
+	display: inline-block;
+	float: left;
+}
+
+.CompPostDepth li{
+	margin:0px 0px 0px 0px;
+	padding:0px 0px 0px 0px; 
+	padding-inline-start:0px;
+	float: left;
 }

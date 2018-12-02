@@ -22,7 +22,7 @@ export class CompPostDepth extends Component {
 		let len = parseInt(this.props.level, 10);
 		for(var i = 0; i<len; i++) {
 			console.log("i="+i)
-			lineSeparators.push(<li>:</li>);
+			lineSeparators.push(<li key={i}>:</li>);
 		}
 		return lineSeparators;
 	}

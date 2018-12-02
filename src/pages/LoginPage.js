@@ -10,7 +10,6 @@ export class LoginPage extends Component {
 	render() {
 		return (
 			<div className="LoginPage">
-				<p>Please enter the login information</p>
 				<div>
 					<LoginWidget/>
 				</div>

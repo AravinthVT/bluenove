@@ -1,9 +1,18 @@
 import React from "react"
+import { connect } from "react-redux";
 import BaseComponent from "../components/BaseComponent"
+
+
 import CompButton from "../components/CompButton"
 import "./DiscussionCreaterWidget.css"
 import ModelEvents from "../models/ModelEvents"
 import ComponentEvent from "../utils/ComponentEvent"
+
+import { createNewPost } from "../actions/postActions"
+import { changeScreen } from "../actions/screenActions"
+import {SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_HOME} from "../utils/ScreenIDs"
+
+//createNewPost(aUserId, aTitle, aDescription, aTag)
 
 class DiscussionCreaterWidget extends BaseComponent{
 	constructor(props){
@@ -16,13 +25,19 @@ class DiscussionCreaterWidget extends BaseComponent{
 			titleErrorMessageVisibility:"hidden",
 			content:"",
 			contentErrorMessage:"",
-			contentErrorMessageVisibility:"hidden"
-
+			contentErrorMessageVisibility:"hidden",
+			tags:"",
+			tagsErrorMessage:"",
 		}
 		this.updateInputValue 	= this.updateInputValue.bind(this)
 		this.updateContentValue = this.updateContentValue.bind(this)
+		this.updateTagsValue = this.updateTagsValue.bind(this)
 		this.isValidEntry		= this.isValidEntry.bind(this)
 		this.handleEvent = this.handleEvent.bind(this)
+		this.getTitleErrorMessage = this.getTitleErrorMessage.bind(this)
+		this.getTagErrorMessage = this.getTagErrorMessage.bind(this)
+		this.getContentErrorMessage = this.getContentErrorMessage.bind(this)
+		
 	}
 
 	componentDidMount(){
@@ -37,7 +52,8 @@ class DiscussionCreaterWidget extends BaseComponent{
 				if(this.isValidEntry()){
 					console.log("sent a querry to add a user to the model");
 					let obj={title:this.state.title, description:this.state.content};
-					this.props.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION,value:obj, target:this})
+					this.props.createNewPost(this.props.loginInfoObj._id, this.state.title, this.state.content, "TODO-tag");
+					//this.props.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION,value:obj, target:this})
 				}
 			}
 		}catch(err){
@@ -54,6 +70,14 @@ class DiscussionCreaterWidget extends BaseComponent{
 					throw err
 			}
 		}
+	}
+
+	shouldComponentUpdate(nextProp, nextState){
+		if(nextProp.newDiscussionStatus=="success"){
+			alert("The disccusion was successfully created");
+			this.props.changeScreen(SCREEN_ID_HOME,{loginInfoObj:this.props.loginInfoObj});
+		}
+		return true
 	}
 
 	isValidEntry(){
@@ -83,20 +107,53 @@ class DiscussionCreaterWidget extends BaseComponent{
 		})
 	}
 
+	updateTagsValue(aEvent){
+		console.log("updating tag value");
+		aEvent.preventDefault();
+		this.setState({
+			tags:aEvent.target.value,
+			tagsErrorMessage:null,
+			tagsErrorMessageVisibility:"hidden"
+		})
+	}
+
+	getTitleErrorMessage(){
+		if(this.state.titleErrorMessage=="") return null
+		return (<li className="DiscussionCreaterWidgetError" style={{visibility:this.state.titleErrorMessage?"visible":"hidden"}}>{this.state.titleErrorMessage}</li>)
+	}
+
+	getTagErrorMessage(){
+		return null
+		/*return (<li className="DiscussionCreaterWidgetError" style={{visibility:this.state.tagsErrorMessageVisibility}}>{this.state.titleErrorMessage}</li>)*/
+	}
+
+	getContentErrorMessage(){
+			if(this.state.contentErrorMessageVisibility=="") return null
+			return (<li className="DiscussionCreaterWidgetError" style={{visibility:this.state.contentErrorMessageVisibility}}>{this.state.contentErrorMessage}</li>)
+	}
+
 	render(){
 		return <div className="DiscussionCreaterWidget">
+			<h1>CREATE A NEW DISCUSSION</h1>
 			<ol>
 				<li>
 					<ol className="DiscussionCreaterWidgetRow">
-					<li>Title</li><li><input className="DiscussionCreaterWidgetTitleInput"  value ={this.state.title} onChange={this.updateInputValue} placeHolder="Title"/></li>
-					<li className="DiscussionCreaterWidgetError" style={{visibility:this.state.titleErrorMessage?"visible":"hidden"}}>{this.state.titleErrorMessage}</li>
+					<li>Title</li><li><input className="DiscussionCreaterWidgetTitleInput"  value ={this.state.title} onChange={this.updateInputValue} placeHolder="title"/></li>
+					{this.getTitleErrorMessage()}
+					</ol>
+				</li>
+				<li>
+					<ol className="DiscussionCreaterWidgetRow">
+					<li>Tags</li><li><input className="DiscussionCreaterWidgetTitleInput"  value ={this.state.tags} onChange={this.updateTagsValue } placeHolder="tags"/></li>
+					{this.getTagErrorMessage()}
+					<li>Please add tags separated by spaces (e.g. music, games, politics)</li>
 					</ol>
 				</li>
 
 				<li>
 					<ol className="DiscussionCreaterWidgetRow">
 					<li>Content</li><li><textarea className="DiscussionCreaterWidgetContentInput" placeHolder="Content" onChange={this.updateContentValue}/></li>
-					<li className="DiscussionCreaterWidgetError" style={{visibility:this.state.contentErrorMessageVisibility}}>{this.state.contentErrorMessage}</li>
+					{this.getContentErrorMessage()}
 					</ol>
 				</li>
 				<li>
@@ -106,4 +163,17 @@ class DiscussionCreaterWidget extends BaseComponent{
 		</div>
 	}
 }
-export default DiscussionCreaterWidget
+
+const mapStateToProps = (state) =>{
+	console.log("LoginWidget: mapStateToProps: check the state here");
+	console.log(state)
+	return {
+		currentScreenID: state.screenContext.screenID,
+		nextScreenID:state.screenContext.nextScreenID,
+		loginInfoObj:state.loginContext.loginInfoObj,
+		loginStatus:state.loginContext.loginStatus,
+		newDiscussionStatus:state.discussionCreatorContext.status
+	}
+}
+
+export default connect(mapStateToProps,{createNewPost, changeScreen})(DiscussionCreaterWidget)

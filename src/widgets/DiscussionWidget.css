@@ -8,8 +8,9 @@
 .discussionWidgetVoteContainer{
 	display: inline-block;
 	float: left;
-	height: 100%;
-	background-color: wheat;
+	/*height: 100%;*/
+	height: auto;
+	background-color: papayawhip;
 }
 
 .discussionWidgetCountContainer{
@@ -20,12 +21,11 @@
 
 
 
-
 .discussionWidgetInfoContainer{
 	display: flex;
-	height: 100%;
+	/*height: 100%;*/
 	background-color: floralwhite;
-	overflow:hidden;
+	/*overflow:hidden;*/
 }
 
 .discussionWidgetInfoContainer *{
@@ -40,6 +40,7 @@
 
 .discussionWidgetInfoContainer ol li{
 	text-align: left;
+	padding-left: 10px;
 }
 
 
@@ -50,7 +51,6 @@
 
 .discussionWidgetInfoGroupContainer li{
 	display: inline-block;
-	margin-left: 5px;
 }
 
 
@@ -77,17 +77,56 @@
 .discussionWidgetTitle{
 	color: #000000;
 	font-size:25px;	
+	padding-left:15px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	padding: 0px 10px 5px 5px;
+	user-select: none;
+}
+
+.discussionWidgetTitle_expanded{
+	color: #000000;
+	font-size:25px;	
+	/*overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;*/
+	padding: 0px 10px 5px 5px;
+	user-select: none;
 }
 
 .discussionWidgetContent{
 	color: #000000;
 	font-size:15px;	
-	overflow: hidden;
+	/*overflow: hidden;*/
 	text-overflow: ellipsis;
-	height: 100%;
+	/*height: 100%;*/
 	padding: 0px 5px 5px 5px;
+	user-select: none;
+}
+
+
+.discussionWidgetReply{
+	width: 100%;
+	color: black
+}
+
+.discussionWidgetReply ol{
+	list-style: none;
+	width: 100%;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+	color: black;
+	display: inline-block;
+	float: left;
+}
+
+.discussionWidgetReply ol li{
+	margin: 0px 0px 0px 10px;
+	padding: 5px 5px 5px 5px;
+	color: darkgrey;
+	display: inline-block;
+	float: left;
+	font-size: 13px;
+	user-select: none;
 }

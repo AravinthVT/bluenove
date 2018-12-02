@@ -1,0 +1,28 @@
+.DiscussionExpandedWidget{
+	display: inline-block;
+	/*margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;*/
+	width: 100%;
+}
+
+.DiscussionExpandedWidget *{
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.DiscussionExpandedWidget ol{
+	list-style:none;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+.DiscussionExpandedWidget ol {
+	list-style:none;
+}
+
+.discussionExpandedWidgetCloseBtnCntr{
+	display: inline-block;
+	width: 150px;
+	float: right;
+	padding: 10px 10px 10px 10px;
+}

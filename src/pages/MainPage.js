@@ -8,7 +8,8 @@ import "./MainPage.css"
 import { connect } from 'react-redux'
 import { fetchPosts } from "../actions/postActions"
 import { changeScreen } from "../actions/screenActions"
-import {SCREEN_ID_CREATE_NEW_DISCUSSION} from "../utils/ScreenIDs"
+//import { loginAction } from "../actions/loginAction"
+import {SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN} from "../utils/ScreenIDs"
 
 import DiscussionCreaterWidget from "../widgets/DiscussionCreaterWidget"
 
@@ -47,7 +48,17 @@ export class MainPage extends BaseComponent {
 		switch(aEvent.type){
 			case ComponentEvent.SCREEN_CHANGE:
 				console.log("trying to change screen");
-				this.props.changeScreen(SCREEN_ID_CREATE_NEW_DISCUSSION, {})
+				console.log("loginInfoObj:::")
+				console.log(this.props.loginInfoObj);
+				//if(this.props.loginInfoObj && this.props.loginInfoObj.loginStatus=="success"){
+				//	console.log("proceeding to the create new discussions page");
+				this.props.changeScreen(SCREEN_ID_CREATE_NEW_DISCUSSION, {loginInfoObj:this.props.loginInfoObj})
+				//}else{
+				//	console.log("proceeding to login page");
+				//	alert("Please login to create a new Discussion");
+				//	this.props.changeScreen(SCREEN_ID_LOGIN, {nextScreenID:SCREEN_ID_CREATE_NEW_DISCUSSION});
+				//}
+				
 		}
 	}
 
@@ -61,10 +72,6 @@ export class MainPage extends BaseComponent {
 	render() {
 		console.log("############# "+this.props.screenContext);
 		console.log(this.props.screenContext);
-		//const newObj=this.state.discussions[0]
-		//<p1>{this.props.screenContext.screenID}</p1>
-		//<p1>{this.props.screenContext.screenID}</p1>
-		//<div><DiscussionCreaterWidget/></div>
 
 		if(this.state.discussions == null) return null;
 		return (
@@ -89,7 +96,8 @@ const mapStateToProps = (state) =>{
 	console.log(state)
 		return {
 		discussions: state.posts.items,
-		screenContext: state.screenContext
+		screenContext: state.screenContext,
+		loginInfoObj:state.loginContext.loginInfoObj
 	}
 }
 

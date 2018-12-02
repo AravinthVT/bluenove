@@ -1,6 +1,7 @@
 .DiscussionCreaterWidget{
 	margin: 0px 0px 0px 0px;
-	padding: 0px 0px 0px 0px;
+	padding: 20px 20px 20px 20px;
+	background-color: white;
 }
 
 .DiscussionCreaterWidget ol li{
@@ -8,8 +9,13 @@
 }
 
 .DiscussionCreaterWidget *{
-	font-size:18px;
+	font-size:15px;
 }
+
+.DiscussionCreaterWidget h1{
+	color: black;
+}
+
 
 .DiscussionCreaterWidget ol{
 	list-style: none;
@@ -20,12 +26,16 @@
 .DiscussionCreaterWidgetRow{
 	list-style: none;
 	display: block;
-
+	color:darkcyan;
+	
 }
 
 .DiscussionCreaterWidgetRow li{
 	text-align: left;
+	font-size: 16px;
 }
+
+
 
 .DiscussionCreaterWidgetTitleInput{
 	width: 100%;

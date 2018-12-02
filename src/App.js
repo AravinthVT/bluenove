@@ -25,7 +25,7 @@ class App extends Component {
   }
 
   componentDidMount(){
-    console.log("this.state.mainModel"+this.state.mainModel);
+    /*console.log("this.state.mainModel"+this.state.mainModel);
     var discussion = {
         about:"music",
         createdDate:"date date",
@@ -34,7 +34,7 @@ class App extends Component {
         creatorId:"5bff009f1c9d440000c0732a",
         visibility:"public"
     }
-    this.state.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION, value:discussion})
+    this.state.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION, value:discussion})*/
   }
 
  /* getCurPage(){
@@ -63,13 +63,14 @@ class App extends Component {
   render() {
     //{this.getCurPage()}
     console.log("APP screen id ::"+this.props.currentScreenID);
+    //style={{backgroundImage: `url(${bgImage})` ,backgroundRepeat: "repeat"}}
     return (
       <Provider store={store}>
         <div className="App">
-          <header className="App-header" style={{backgroundImage: `url(${bgImage})` ,backgroundRepeat: "repeat"}}>
+          <header className="App-header">
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
             <NavBar handleEvent={this.handleEvent}/>
             <PageLoader/>
-            
           </header>
         </div>
       </Provider>
