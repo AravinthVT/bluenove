@@ -8,11 +8,11 @@ import "./DiscussionCreaterWidget.css"
 import ModelEvents from "../models/ModelEvents"
 import ComponentEvent from "../utils/ComponentEvent"
 
-import { createNewPost } from "../actions/postActions"
+import { createNewDiscussion } from "../actions/postActions"
 import { changeScreen } from "../actions/screenActions"
 import {SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_HOME} from "../utils/ScreenIDs"
 
-//createNewPost(aUserId, aTitle, aDescription, aTag)
+//createNewDiscussion(aUserId, aTitle, aDescription, aTag)
 
 class DiscussionCreaterWidget extends BaseComponent{
 	constructor(props){
@@ -52,7 +52,7 @@ class DiscussionCreaterWidget extends BaseComponent{
 				if(this.isValidEntry()){
 					console.log("sent a querry to add a user to the model");
 					let obj={title:this.state.title, description:this.state.content};
-					this.props.createNewPost(this.props.loginInfoObj._id, this.state.title, this.state.content, "TODO-tag");
+					this.props.createNewDiscussion(this.props.loginInfoObj._id, this.state.title, this.state.content, "TODO-tag");
 					//this.props.mainModel.handleEvent({event:ModelEvents.CREATE_NEW_DISCUSSION,value:obj, target:this})
 				}
 			}
@@ -176,4 +176,4 @@ const mapStateToProps = (state) =>{
 	}
 }
 
-export default connect(mapStateToProps,{createNewPost, changeScreen})(DiscussionCreaterWidget)
+export default connect(mapStateToProps,{createNewDiscussion, changeScreen})(DiscussionCreaterWidget)

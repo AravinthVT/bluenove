@@ -6,8 +6,9 @@ import "./DiscussionWidget.css"
 import BaseComponent from "../components/BaseComponent"
 import CompPostDepth from "../components/CompPostDepth"
 import CompVoter from "../components/CompVoter"
+import CompButton from "../components/CompButton"
 import lineSep from "../images/lineSep3.svg"
-import { changeScreen } from "../actions/screenActions"
+import { changeScreen, panelNewPostEntry } from "../actions/screenActions"
 
 import { SCREEN_ID_DISCUSSION} from "../utils/ScreenIDs"
 
@@ -53,6 +54,10 @@ export class DiscussionWidget extends BaseComponent {
 				//this.props.handleEvent(aEvent)
 				this.props.changeScreen(SCREEN_ID_DISCUSSION, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id});
 				break;
+			case "reply":
+				this.props.changeScreen(SCREEN_ID_DISCUSSION, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id});
+				this.props.panelNewPostEntry({visible:true});
+				break;
 			default:
 				throw Error("unknown event:"+aEvent.event)
 		}
@@ -96,10 +101,11 @@ export class DiscussionWidget extends BaseComponent {
 	            <div className="discussionWidgetInfoContainer" >
 	            	<ol>
 		            	<li>
+
 		            		<ol className="discussionWidgetInfoGroupContainer">
-		            		<li className="discussionWidgetInfoGroupTitle">{l_model.groupName}</li>
-		            		<li className="discussionWidgetInfoGroupUser">{l_model.userName}</li>
-		            		<li className="discussionWidgetInfoGroupPostTime">{l_model.createdDate}</li>
+			            		<li className="discussionWidgetInfoGroupTitle">{l_model.groupName}</li>
+			            		<li className="discussionWidgetInfoGroupUser">{l_model.userName}</li>
+			            		<li className="discussionWidgetInfoGroupPostTime">{(new Date(l_model.createdDate)).toLocaleString()}</li>
 		            		</ol>
 		            	</li>
 		            	<li className={this.getClassName("title")} onClick={()=>this.handleEvent({event:ComponentEvent.CLICK})}>
@@ -114,7 +120,7 @@ export class DiscussionWidget extends BaseComponent {
 					            	<li>replies: 0</li>
 				        			<li>Share</li>
 					            	<li>Report</li>
-					            	<li>Reply</li>
+					            	<li><a href="#" onClick={()=>{this.handleEvent({event:"reply",value:null})}}>Reply</a></li>
 				        		</ol>
 				        	</div>
 		            	</li>
@@ -141,4 +147,4 @@ const mapStateToProps = (state) =>{
 	}
 }
 
-export default connect(mapStateToProps,{ changeScreen})(DiscussionWidget)
+export default connect(mapStateToProps,{ changeScreen, panelNewPostEntry})(DiscussionWidget)

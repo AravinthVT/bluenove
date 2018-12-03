@@ -6,6 +6,7 @@ import BaseComponent from "../components/BaseComponent"
 import CompButton from "../components/CompButton"
 import DiscussionWidget from "../widgets/DiscussionWidget"
 import PostWidget from "../widgets/PostWidget"
+import PostCreatorWidget from "../widgets/PostCreatorWidget"
 import "./DiscussionExpandedWidget.css"
 import ModelEvents from "../models/ModelEvents"
 import ComponentEvent from "../utils/ComponentEvent"
@@ -72,9 +73,11 @@ class DiscussionExpandedWidget extends BaseComponent{
 				<li>
 					<DiscussionWidget model={this.props.currentDiscussion} displayType="expanded"/>
 				</li>
-				{this.getAllPosts()}
+				
+					{this.getAllPosts()}
+			
 				<li>
-					TODO - post widget  {this.props.discussionID}
+					<PostCreatorWidget style={{visibility:(true)}}/>
 				</li>
 			</ol>
 		</div>
@@ -92,6 +95,7 @@ const mapStateToProps = (state) =>{
 		discussionID 	: state.screenContext.discussionID,
 		currentDiscussion: state.discussionExpandedContext.currentDiscussion,
 		allChildPosts	: state.discussionExpandedContext.allChildPosts
+
 	}
 }
 

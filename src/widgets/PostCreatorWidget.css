@@ -1,0 +1,47 @@
+.PostCreatorWidget{
+	padding: 0px;
+	margin:0px;
+	background-color: pink;
+	display: inline-block;
+	width: 100%;
+	/*height: 100%;*/
+}
+
+.PostCreatorWidget ol{
+	padding: 0px;
+	margin:0px;
+	list-style: none;
+}
+
+.postCreatorWidgetBtnContainer{
+	margin: 0px;
+	padding:0px;
+	display: inline-block;
+}
+
+.postCreatorWidgetBtnContainer ol{
+	margin: 0px;
+	padding:0px;
+	display: inline-block;
+}
+
+.postCreatorWidgetBtnContainer ol li{
+	margin-left: 30px;
+	padding:0px;
+	display: inline-block;
+
+}
+
+.postCreatorWidgetTitle{
+	text-align: left;
+	font-size: 16px;
+	color: black;
+	padding-left: 10px;
+}
+
+.postCreatorWidgetTextArea{
+	display: inline-block;
+	width: 95%;
+	height: 150px;
+	border-radius: 5px;
+}

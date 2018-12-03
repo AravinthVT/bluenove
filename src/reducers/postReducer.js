@@ -1,4 +1,4 @@
-import {FETCH_POSTS, NEW_DISCUSSION, NEW_POSTS, LOGIN_SUCCESS, LOGIN_FAILED, EXPAND_DISCUSSION} from "../actions/types"
+import {FETCH_POSTS, NEW_DISCUSSION, NEW_POSTS, INSERT_POST, LOGIN_SUCCESS, LOGIN_FAILED, EXPAND_DISCUSSION} from "../actions/types"
 
 const initialState = {
 	items:[],
@@ -31,6 +31,12 @@ export default function(state=initialState, actions){
 				data	:actions.payload.data,
 				currentDiscussion:actions.payload.currentDiscussion,
 				allChildPosts:actions.payload.allChildPosts
+			}
+		case INSERT_POST:
+			console.log("CHK: postReducer: reaches here 22");
+			return {
+				...state,
+				insertPostStatus	:actions.payload.insertStatus
 			}
 		/*case LOGIN_SUCCESS:
 			return {

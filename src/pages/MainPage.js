@@ -12,6 +12,7 @@ import { changeScreen } from "../actions/screenActions"
 import {SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN} from "../utils/ScreenIDs"
 
 import DiscussionCreaterWidget from "../widgets/DiscussionCreaterWidget"
+import PostCreatorWidget from "../widgets/PostCreatorWidget"
 
 export class MainPage extends BaseComponent {
 	constructor(props){
@@ -72,12 +73,15 @@ export class MainPage extends BaseComponent {
 	render() {
 		console.log("############# "+this.props.screenContext);
 		console.log(this.props.screenContext);
+		//<PostCreatorWidget/>
 
 		if(this.state.discussions == null) return null;
 		return (
 			<div className="MainPage">
 				<div>
-					<CompButton value="Create Post" handleEvent={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE,value:"DiscussionCreatorPage"})}/>
+					<div className="mainPageCloseBtnCntr">
+						<CompButton value="Create Post" handleEvent={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE,value:"DiscussionCreatorPage"})}/>
+					</div>
 					<div>
 						{this.props.discussions.map((item, index)=>{
 							return <DiscussionWidget key={index} depth="0" model={item}/>

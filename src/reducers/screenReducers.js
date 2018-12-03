@@ -1,10 +1,15 @@
 import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION} from "../utils/ScreenIDs"
-import {SCREEN_CHANGED} from "../actions/types"
+import {PANEL_ID_NEW_POST_ENTRY} from "../utils/ScreenIDs"
+
+import {SCREEN_CHANGED, PANEL_NEW_POST_ENTRY_PROP_CHANGE} from "../actions/types"
 
 export const initState = {
 	screenID:SCREEN_ID_HOME,
 	nextScreenID:null,
-	data:null
+	data:null,
+	panelNewPostEntryProps:{
+		visible:true
+	}
 }
 
 export default function screenReducer(state=initState, actions){
@@ -16,10 +21,19 @@ export default function screenReducer(state=initState, actions){
 			let __nextScreenID = null;
 			
 			return {
+				...state,
 				screenID 		:actions.payload.screenID,
 				nextScreenID 	:actions.payload.nextScreenID,
 				data			:actions.payload.data,
 				discussionID	:actions.payload.discussionID
+			}
+		case PANEL_NEW_POST_ENTRY_PROP_CHANGE:
+			return{
+				...state,
+				panelNewPostEntryProps:{
+					...state.panelNewPostEntryProps,
+					...actions.payload
+				}
 			}
 		default:
 			return state

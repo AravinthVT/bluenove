@@ -153,7 +153,7 @@ async function createNewDiscussion(req, res){
 		description:req.params.description,
 		createdDate:Date.now(),
 		visibility:"public",
-		postIds:[]
+		childIds:[]
 	}
 
 	let promise = new Promise((resolve, reject)=>{
@@ -189,6 +189,217 @@ async function createNewDiscussion(req, res){
 	console.log("return result");
 	return result
 };
+
+async function __insertNewPost(creatorId, parentId, content, parentType){
+	console.log("__insertNewPost: ");
+	let __newPostDoc = {
+		content:content,
+		parentType:parentType,
+		parentId:parentId,
+		creatorId:creatorId,
+		createdDate:Date.now(),
+		childIds:[]
+	}
+
+	const __responseJson={
+		insertId:-1,
+		insertStatus:"failure"
+	}
+
+	let promise = new Promise((resolve, reject)=>{
+		let connectObj = MongoClient.connect(url, (err, client)=>{
+			console.log("\ndb connected");
+			if(err) {
+				console.log("TODO: error accessing to me notified");
+				resolve(__responseJson);
+				return;
+			}
+			let db = client.db("bluenove");
+			console.log("About to insertOne Post document");
+			db.collection("posts").insertOne(__newPostDoc).then((postInsertResult)=>{
+				console.log("Success inserting the POST document");
+				__responseJson.insertId = postInsertResult.insertedId;
+				__responseJson.insertStatus = "success";
+				resolve(__responseJson);
+			}).catch((err)=>{
+				console.log("Failed to inserting the POST document");
+				console.log(err)
+				//reject(__responseJson);
+			})
+			client.close();
+		})//MongoClient
+	})
+	return promise;
+}
+
+
+async function __appendPostIdToDoc(aParentDocId, aPostId, aDocType){
+	return ( new Promise((resolve, reject)=>{
+		MongoClient.connect(url, (err, client)=>{
+			let collectionName = "test";
+			let addObj = {discussionIds:aPostId}
+			switch(aDocType){
+				case "post":
+					collectionName = "posts"
+					addObj = {childIds:aPostId}
+					break;
+				case "discussion":
+					collectionName = "test"
+					addObj = {childIds:aPostId}
+					break;
+				default:
+					throw new Error("__appendPostIdToDoc unknow aDocType:"+aDocType);
+			}
+			client.db("bluenove").collection(collectionName).updateOne({_id:ObjectId(aParentDocId)}, {$addToSet:addObj}).then((discussionUpdateValue)=>{
+				console.log("\tSuccess updated the DISCUSSION document");
+				resolve(discussionUpdateValue);
+				client.close();
+			}).catch((err)=>{
+				console.log("\tFailed updated the DISCUSSION document id:"+__discussionDocID);
+				console.log(err);
+				reject("TODO __appendPostIdToDoc yet to handle");
+				client.close();
+			})
+		})
+	}))
+}
+
+
+async function __appendPostIdToUser(aUserId, aPostId, aDocType){
+	//console.log("__appendPostIdToUser: aUserId"+aUserId+" aPostId:"+aPostId+" aDocType:"+aDocType);
+	return (new Promise((resolve, reject)=>{
+		MongoClient.connect(url, (err, client)=>{
+			let addObj = {discussionIds:aPostId}
+			switch(aDocType){
+				case "post":
+					addObj = {postIds:aPostId}
+					break;
+				case "discussion":
+					addObj = {discussionIds:aPostId}
+					break;
+				default:
+					throw new Error("__appendPostIdToUser unknow aDocType:"+aDocType);
+			}
+			client.db("bluenove").collection("users").updateOne({_id:ObjectId(aUserId)}, {$addToSet:addObj}).then((discussionUpdateValue)=>{
+				console.log("\t__appendPostIdToUser: Success updated the User document");
+				resolve(discussionUpdateValue);
+				client.close();
+			}).catch((err)=>{
+				console.log("\t__appendPostIdToUser: Failed updated the user document id:"+aUserId);
+				console.log(err);
+				reject("TODO __appendPostIdToDoc: yet to handle");
+				client.close();
+			})
+		})
+	}))
+}
+
+
+async function createNewPost(req, res){
+	console.log("---- createNewPost ---");
+	let insertRes 	= await __insertNewPost(req.params.creatorId, req.params.parentId, req.params.content, req.params.parentType);
+	let docRes 		= await __appendPostIdToDoc(req.params.parentId, insertRes.insertId, req.params.parentType);
+	let userRes 	= await __appendPostIdToUser(req.params.creatorId, insertRes.insertId, req.params.parentType);
+	console.log("############# you should see this at the end -- all done #################");
+	res.json(insertRes);
+}
+
+async function createNewPost1(req, res){
+	console.log("createNewPost")
+
+	res.json(res.params);
+
+	let __allPromises=[]
+	let __creatorID = req.params.creatorId;
+	let __discussionDocID = req.params.parentId;
+	let __newPostDoc = {
+		content:req.params.content,
+		parentType:req.params.parentType,
+		parentId:__discussionDocID,
+		creatorId:__creatorID,
+		createdDate:Date.now(),
+		childIds:[]
+	}
+	const __responseJson={
+		insertId:-1,
+		insertStatus:"failure"
+	}
+
+	let promise = new Promise((resolve, reject)=>{
+		let connectObj = MongoClient.connect(url, (err, client)=>{
+			console.log("\ndb connected");
+			if(err) {
+				console.log("TODO: error accessing to me notified");
+				return;
+			}
+			let db = client.db("bluenove");
+			console.log("About to insertOne Post document");
+			//db.collection("post").updateOne({_id:ObjectId(__discussionDocID)}, {$addToSet:{childIds:[]}})
+			let doc = db.collection("posts").insertOne(__newPostDoc).then((postInsertResult)=>{
+				console.log("Success inserting the POST document");
+				//console.log(postInsertResult);
+				__responseJson.insertId = postInsertResult.insertedId;
+				__responseJson.insertStatus = "success";
+				MongoClient.connect(url, (err, client)=>{
+					let db = client.db("bluenove");
+					db.collection("test").updateOne({_id:ObjectId(__discussionDocID)}, {$addToSet:{childIds:[postInsertResult.insertedId]}}).then((discussionUpdateValue)=>{
+						console.log("Success updated the DISCUSSION document");
+						console.log(discussionUpdateValue);
+
+						/*db.collection("users").updateOne({_id:ObjectId(__creatorID)}, {$addToSet:{childIds:[postInsertResult.insertedId]}}).then((userUpdateValue)=>{
+							console.log("Success updated the USER document");
+							console.log(userUpdateValue);
+							//resolve(__responseJson);
+						}).catch((err)=>{
+							console.log("Failed updated the USER document id:"+__creatorID);
+							console.log(err);
+							//reject(__responseJson);
+						})*/
+
+					}).catch((err)=>{
+						console.log("Failed updated the DISCUSSION document id:"+__discussionDocID);
+						console.log(err);
+						//reject(__responseJson);
+					})
+				})
+			}).catch((err)=>{
+				console.log("Failed to inserting the POST document");
+				console.log(err)
+				//reject(__responseJson);
+			})
+			client.close();
+			//console.log("inserted reply");
+		})
+		console.log("connectObjconnectObjconnectObjconnectObjconnectObj");
+		console.log(connectObj);
+		/*.then(postInsertRes=>{
+			console.log("finally================================")
+			MongoClient.connect(url, (err, client)=>{
+				console.log("\ndb connected");
+				if(err) {
+					console.log("TODO: error accessing to me notified");
+					return;
+				}
+				let db = client.db("bluenove");
+				console.log("About to insertOne Post document");
+				//updating the discussion to the childIds
+				db.collection("test").findOne({_id:ObjectId(__discussionDocID)}).then(discussionDoc=>{
+					console.log("successfully found a document with parent id:"+__discussionDocID);
+					console.log(value)
+				})
+				client.close();
+				//console.log("inserted reply");
+			}).then(value=>{
+				console.log("finally================================")
+				console.log(value);
+			})
+		})*/
+	})
+
+	//__allPromises.push(promise);
+	return promise;
+	//Promise.all(__allPromises);
+}
 
 async function fetchDiscussionByID(req, res){
 	console.log("----------- fetchDiscussionByID()");
@@ -357,6 +568,19 @@ app.get("/create-new-discussion/userid/:creatorId/title/:title/description/:desc
 	console.log(req.params)
 	//res.send("TODO creating new discussions "+ req.params);
 	createNewDiscussion(req, res);
+})
+
+//`http://localhost:3001/create-new-post/userid/${aLoginInfoObj._id}/content/${aContent}/parentId/${aParentDiscussionId}
+//create-new-post/userid/${config.loginInfoObj._id}/content/${aContent}/parentId/${config.parentDiscussionId}
+app.get("/create-new-post/userid/:creatorId/content/:content/parentId/:parentId/parentType/:parentType",(req,res)=>{
+	console.log(req.params)
+	//res.send("TODO creating new discussions "+ req.params);
+	createNewPost(req, res);
+	/*.then((insertStatus)=>{
+		res.json(insertStatus);
+	}).catch((err)=>{
+		res.send(err);
+	})*/
 })
 
 app.get("/discussions/:discussionsID/userid/:currentUserID",(req,res)=>{

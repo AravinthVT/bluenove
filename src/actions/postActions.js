@@ -1,6 +1,7 @@
 import {FETCH_POSTS, 
 	NEW_DISCUSSION, 
-	NEW_POSTS, 
+	NEW_POSTS,
+	INSERT_POST, 
 	LOGIN_SUCCESS, 
 	LOGIN_FAILED, 
 	EXPAND_DISCUSSION} from "./types"
@@ -30,8 +31,8 @@ export function fetchPosts(){
 	}
 }
 
-
-export function createNewPost(aUserId, aTitle, aDescription, aTags){
+//this is to create new discussion
+export function createNewDiscussion(aUserId, aTitle, aDescription, aTags){
 	let newPost={
 		creatorId:aUserId,
 		tags:aTags,
@@ -51,13 +52,56 @@ export function createNewPost(aUserId, aTitle, aDescription, aTags){
 			}
 			return response.json();
 		}).then((data)=>{
-			console.log("CHK: createNewPost: Successfully update the discussions data");
+			console.log("CHK: createNewDiscussion: Successfully update the discussions data");
 			console.log(data);
 			dispatch({type:NEW_DISCUSSION, payload:{status:"success", data:data}});
 			return data;
 		}).catch((err)=>{
-			console.log("CHK: createNewPost: create the new discussion "+err);
+			console.log("CHK: createNewDiscussion: create the new discussion "+err);
 			dispatch({type:NEW_DISCUSSION, payload:{status:"failed", data:null}});
+			throw err
+		})
+	}
+}
+
+export function submitPost(aContent, config){
+	//if(aLoginInfoObj){
+		/*
+		let newPost={
+			content: aContent,
+			parentId: aParentDiscussionId,
+			creatorId:aLoginInfoObj._id,
+			createdDate:Date.now(),
+			childIds:[]
+		}
+		*/
+	//}
+
+	return function(dispatch){
+		let parentType = "discussion";
+		const aUrl =`http://localhost:3001/create-new-post/userid/${config.loginInfoObj._id}/content/${aContent}/parentId/${config.parentDiscussionId}/parentType/${parentType}`
+		fetch(aUrl).then((response)=>{
+			console.log("Successfully response");
+			console.log(response);
+			if(response.status== "200"){
+				console.log("Successfully creating new post the discussions");
+				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
+			}else{
+				console.log("TODO handle status issue:"+response.status);
+			}
+			return response.json();
+		}).then((insertResult)=>{
+			console.log("CHK: createNewDiscussion: Successfully update the discussions data");
+			console.log(insertResult);
+			if(insertResult.insertStatus == "success"){
+				dispatch({type:INSERT_POST, payload:{insertStatus:"success"}});
+			}else{
+				dispatch({type:INSERT_POST, payload:{insertStatus:"failed"}});
+			}
+			return true;
+		}).catch((err)=>{
+			console.log("CHK: createNewDiscussion: create the new discussion "+err);
+			dispatch({type:INSERT_POST, payload:{insertStatus:"failed", data:null}});
 			throw err
 		})
 	}
