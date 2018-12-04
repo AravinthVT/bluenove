@@ -65,7 +65,7 @@ export class PostWidget extends BaseComponent {
 		            		<ol className="postWidgetInfoGroupContainer">
 		            		<li className="postWidgetInfoGroupTitle">{l_model.groupName}</li>
 		            		<li className="postWidgetInfoGroupUser">{l_model.userName}</li>
-		            		<li className="postWidgetInfoGroupPostTime">{l_model.createdDate}</li>
+		            		<li className="postWidgetInfoGroupPostTime">{(new Date(l_model.createdDate)).toLocaleString()}</li>
 		            		</ol>
 		            	</li>
 		            	<li className="postWidgetContent" onClick={()=>this.handleEvent({event:ComponentEvent.CLICK})}>

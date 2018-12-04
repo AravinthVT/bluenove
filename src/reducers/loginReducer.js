@@ -1,4 +1,4 @@
-import {LOGIN_SUCCESS, LOGIN_FAILED, IS_SIGNED_USER} from "../actions/types"
+import {LOGIN_SUCCESS, LOGIN_FAILED, IS_SIGNED_USER, LOGIN_OUT} from "../actions/types"
 import {SCREEN_ID_HOME} from "../utils/ScreenIDs"
 
 const initialState = {
@@ -11,7 +11,7 @@ const initialState = {
 export default function(state=initialState, actions){
 	console.log("CHK: loginReducer: entry");
 	switch(actions.type){
-			
+		
 		case LOGIN_SUCCESS:
 			console.log(actions);
 			return {
@@ -27,6 +27,13 @@ export default function(state=initialState, actions){
 				loginInfoObj:actions.payload,
 				userType:"guest",
 				loginStatus:"failed"
+			}
+		case LOGIN_OUT:
+			return {
+				...state,
+				loginInfoObj:null,
+				userType:"guest",
+				loginStatus:"init"
 			}
 		case IS_SIGNED_USER:
 		default:

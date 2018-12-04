@@ -9,7 +9,8 @@ export const initState = {
 	data:null,
 	panelNewPostEntryProps:{
 		visible:true
-	}
+	},
+	currentDocType:""
 }
 
 export default function screenReducer(state=initState, actions){
@@ -19,13 +20,18 @@ export default function screenReducer(state=initState, actions){
 		case SCREEN_CHANGED:
 			console.log("CHK: screenReducer: reaches here 22");
 			let __nextScreenID = null;
-			
+			let returnObj = {...state};
+			/*if(actions.payload){
+				if(actions.payload.discussionID){
+					returnObj.discussionID = actions.payload.discussionID
+				}
+			}*/
 			return {
 				...state,
-				screenID 		:actions.payload.screenID,
+				...actions.payload
+				/*screenID 		:actions.payload.screenID,
 				nextScreenID 	:actions.payload.nextScreenID,
-				data			:actions.payload.data,
-				discussionID	:actions.payload.discussionID
+				data			:actions.payload.data,*/
 			}
 		case PANEL_NEW_POST_ENTRY_PROP_CHANGE:
 			return{

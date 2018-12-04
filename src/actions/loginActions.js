@@ -1,4 +1,4 @@
-import {LOGIN_SUCCESS, LOGIN_FAILED, IS_SIGNED_USER} from "./types"
+import {LOGIN_SUCCESS, LOGIN_FAILED, LOGIN_OUT, IS_SIGNED_USER} from "./types"
 
 export function login(aUserName, aPassword){
 	console.log(`aUserName:${aUserName}`);
@@ -32,6 +32,14 @@ export function login(aUserName, aPassword){
 			dispatch({type:LOGIN_FAILED, payload:null});
 			throw err
 		})
+	}
+}
+
+export function logout(){
+	
+	return function(dispatch){
+		//const aUrl ="http://localhost:3001/discussions"
+		dispatch({type:LOGIN_OUT, payload:null});
 	}
 }
 

@@ -4,7 +4,10 @@ import {FETCH_POSTS,
 	INSERT_POST, 
 	LOGIN_SUCCESS, 
 	LOGIN_FAILED, 
-	EXPAND_DISCUSSION} from "./types"
+	EXPAND_DISCUSSION,
+	DELETE_DISCUSSION} from "./types"
+
+import {QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED} from "../utils/QueryLifeCycle"
 
 export function fetchPosts(){
 	return function(dispatch){
@@ -40,31 +43,73 @@ export function createNewDiscussion(aUserId, aTitle, aDescription, aTags){
 		description:aDescription
 	}
 	return function(dispatch){
-		const aUrl =`http://localhost:3001/create-new-discussion/userid/${aUserId}/title/${aTitle}/description/${aDescription}/tags/${aTags}`
+		const aUrl =`http://localhost:3001/create-new-discussion/userid/${aUserId}/title/${encodeURIComponent(aTitle)}/description/${encodeURIComponent(aDescription)}/tags/${encodeURIComponent(aTags)}`
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
 			if(response.status== "200"){
 				console.log("Successfully creating new post the discussions");
+				return response.json();
 				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
 			}else{
 				console.log("TODO handle status issue:"+response.status);
+				//alert("Couldnt create the new discussion");
+				return null;
 			}
-			return response.json();
 		}).then((data)=>{
 			console.log("CHK: createNewDiscussion: Successfully update the discussions data");
 			console.log(data);
 			dispatch({type:NEW_DISCUSSION, payload:{status:"success", data:data}});
+			dispatch({type:NEW_DISCUSSION, payload:{status:"init", data:data}});
 			return data;
 		}).catch((err)=>{
 			console.log("CHK: createNewDiscussion: create the new discussion "+err);
 			dispatch({type:NEW_DISCUSSION, payload:{status:"failed", data:null}});
+			dispatch({type:NEW_DISCUSSION, payload:{status:"init", data:null}});
 			throw err
 		})
 	}
 }
 
-export function submitPost(aContent, config){
+//this is to create new discussion
+export function deleteDiscussion(aDiscussionId){
+	return function(dispatch){
+		const aUrl =`http://localhost:3001/delete-discussion/discussionId/${aDiscussionId}`
+		fetch(aUrl).then((response)=>{
+			console.log("Successfully response");
+			console.log(response);
+			if(response.status== "200"){
+				console.log("deleteDiscussion: Successfully got a response");
+				return response.json();
+				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
+			}else{
+				console.log("deleteDiscussion: Failed to get a response");
+				console.log("TODO handle status issue:"+response.status);
+				//alert("Couldnt create the new discussion");
+				return null;
+			}
+		}).then((data)=>{
+			console.log("CHK: createNewDiscussion: Successfully update the discussions data");
+			console.log(data);
+			if(data && data.deleteStatus=="success"){
+			//dispatch({type:DELETE_DISCUSSION, payload:{status:"success", data:data}});
+			//dispatch({type:DELETE_DISCUSSION, payload:{status:"init", data:data}});
+				return data;
+			}else{
+				throw new Error("Problem deleting")
+			}
+		}).catch((err)=>{
+			console.log("CHK: createNewDiscussion: create the new discussion "+err);
+			//dispatch({type:DELETE_DISCUSSION, payload:{status:"failed", data:null}});
+			//dispatch({type:DELETE_DISCUSSION, payload:{status:"init", data:null}});
+			throw err
+		})
+	}
+}
+
+
+
+export function submitPost(userId, aContent, aParentDiscussionId, aParentType){
 	//if(aLoginInfoObj){
 		/*
 		let newPost={
@@ -76,32 +121,38 @@ export function submitPost(aContent, config){
 		}
 		*/
 	//}
-
+	
 	return function(dispatch){
-		let parentType = "discussion";
-		const aUrl =`http://localhost:3001/create-new-post/userid/${config.loginInfoObj._id}/content/${aContent}/parentId/${config.parentDiscussionId}/parentType/${parentType}`
+		const aUrl =`http://localhost:3001/create-new-post/userid/${userId}/content/${aContent}/parentId/${aParentDiscussionId}/parentType/${aParentType}`
+		dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_SENT}});
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
 			if(response.status== "200"){
 				console.log("Successfully creating new post the discussions");
 				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
+				return response.json();
 			}else{
 				console.log("TODO handle status issue:"+response.status);
+				return null;
 			}
-			return response.json();
+			
 		}).then((insertResult)=>{
-			console.log("CHK: createNewDiscussion: Successfully update the discussions data");
+			
 			console.log(insertResult);
-			if(insertResult.insertStatus == "success"){
-				dispatch({type:INSERT_POST, payload:{insertStatus:"success"}});
+			if(insertResult && insertResult.insertStatus == "success"){
+				console.log("CHK: createNewDiscussion: Successfully update the discussions data");
+				dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_SUCCESS}});
+				dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_IDLE}});
 			}else{
-				dispatch({type:INSERT_POST, payload:{insertStatus:"failed"}});
+				dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_FAILED, insertPostStatusMessage:"Couldn't insert document"}});
+				dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_IDLE}});
 			}
 			return true;
 		}).catch((err)=>{
 			console.log("CHK: createNewDiscussion: create the new discussion "+err);
-			dispatch({type:INSERT_POST, payload:{insertStatus:"failed", data:null}});
+			dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_FAILED}});
+			dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_IDLE}});
 			throw err
 		})
 	}
@@ -115,10 +166,15 @@ function getAllPosts(aDiscussion, aDepth=0){
 	console.log(aDiscussion);
 	let __childPosts = aDiscussion.childPosts;
 	aDiscussion.depth = aDepth;
+	let count=0;
 	if(__childPosts && __childPosts.length>0){
 		__childPosts.forEach((childPost)=>{
-			__allPosts.push(childPost);
-			__allPosts.push(...getAllPosts(childPost, aDepth+1));
+			console.log("**************** count:"+count);
+			if(childPost){
+				__allPosts.push(childPost);
+				__allPosts.push(...getAllPosts(childPost, aDepth+1));
+				count++;
+			}
 		})
 	}
 	return __allPosts

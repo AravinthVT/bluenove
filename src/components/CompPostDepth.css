@@ -12,3 +12,9 @@
 	padding-inline-start:0px;
 	float: left;
 }
+
+.compPostDepthStep{
+	width:20px;
+	height: 10px;
+	background-color: black;
+}

@@ -14,6 +14,7 @@ import ComponentEvent from "../utils/ComponentEvent"
 import { fetchDiscussionByID } from "../actions/postActions"
 import { changeScreen } from "../actions/screenActions"
 import {SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_HOME} from "../utils/ScreenIDs"
+import {QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED} from "../utils/QueryLifeCycle"
 
 
 class DiscussionExpandedWidget extends BaseComponent{
@@ -27,6 +28,8 @@ class DiscussionExpandedWidget extends BaseComponent{
 		}
 		//this.updateInputValue 	= this.updateInputValue.bind(this)
 		this.getAllPosts =this.getAllPosts.bind(this);
+		this.getPostCreatorVisibility =this.getPostCreatorVisibility.bind(this);
+		
 		
 	}
 
@@ -48,6 +51,9 @@ class DiscussionExpandedWidget extends BaseComponent{
 	}
 
 	shouldComponentUpdate(nextProp, nextState){
+		if(this.props.insertPostStatus == QUERY_LIFECYCLE_SUCCESS){
+			this.props.fetchDiscussionByID(this.props.discussionID, this.props.loginInfoObj);
+		}
 		return true
 	}
 
@@ -62,6 +68,10 @@ class DiscussionExpandedWidget extends BaseComponent{
 		return result;
 	}
 
+	getPostCreatorVisibility(){
+
+	}
+
 	render(){
 		console.log("this.props.currentDiscussion");
 		console.log(this.props.currentDiscussion);
@@ -73,9 +83,7 @@ class DiscussionExpandedWidget extends BaseComponent{
 				<li>
 					<DiscussionWidget model={this.props.currentDiscussion} displayType="expanded"/>
 				</li>
-				
 					{this.getAllPosts()}
-			
 				<li>
 					<PostCreatorWidget style={{visibility:(true)}}/>
 				</li>
@@ -94,7 +102,8 @@ const mapStateToProps = (state) =>{
 		loginStatus		: state.loginContext.loginStatus,
 		discussionID 	: state.screenContext.discussionID,
 		currentDiscussion: state.discussionExpandedContext.currentDiscussion,
-		allChildPosts	: state.discussionExpandedContext.allChildPosts
+		allChildPosts	: state.discussionExpandedContext.allChildPosts,
+		insertPostStatus 		: state.postModel.insertPostStatus
 
 	}
 }

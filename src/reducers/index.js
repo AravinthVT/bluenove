@@ -8,5 +8,6 @@ export default combineReducers({
 	screenContext	: screenReducers,
 	loginContext	: loginReducer,
 	discussionCreatorContext: postReducer,
-	discussionExpandedContext: postReducer
+	discussionExpandedContext:postReducer,
+	postModel		: postReducer
 });

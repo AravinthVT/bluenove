@@ -9,6 +9,7 @@ import CompButton from "../components/CompButton"
 import { changeScreen, panelNewPostEntry } from "../actions/screenActions"
 import { submitPost } from "../actions/postActions"
 import { SCREEN_ID_DISCUSSION} from "../utils/ScreenIDs"
+import {QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED} from "../utils/QueryLifeCycle"
 
 export class PostCreatorWidget extends BaseComponent {
 	constructor(props){
@@ -23,8 +24,10 @@ export class PostCreatorWidget extends BaseComponent {
 		switch(aEvent.event){
 			case "submit":
 				console.log("Submit from PostWidget");
-				this.props.submitPost(this.state.content, {loginInfoObj:this.props.loginInfoObj, discussionID:"5bfdd2141c9d440000681a3e"});
-				this.props.panelNewPostEntry({visible:false});
+				console.log(this.state.content);
+				this.props.submitPost(this.props.loginInfoObj._id, this.state.content, this.props.discussionID, this.props.currentDocType);
+				//this.props.submitPost(this.state.content, {loginInfoObj:this.props.loginInfoObj, discussionID:"5bfdd2141c9d440000681a3e"});
+				//this.props.panelNewPostEntry({visible:false});
 				break;
 			case "cancel":
 				console.log("Cancel from PostWidget");
@@ -37,7 +40,6 @@ export class PostCreatorWidget extends BaseComponent {
 
 	updateContentText(aEvent){
 		this.setState({content:aEvent.target.value});
-
 	}
 
 	render() {
@@ -49,16 +51,16 @@ export class PostCreatorWidget extends BaseComponent {
 						<div className="postCreatorWidgetTitle">Please enter a comment to submit</div>
 					</li>
 					<li>
-						<textarea className="postCreatorWidgetTextArea">{this.state.content}</textarea>
+						<textarea className="postCreatorWidgetTextArea" onChange={this.updateContentText}>{this.state.content}</textarea>
 					</li>
 					<li>
 						<div className="postCreatorWidgetBtnContainer">
 							<ol>
 								<li>
-									<CompButton value="Submit" wdith="150px" handleEvent={()=>this.handleEvent({event:"submit"})}/>
+									<CompButton value="Submit" wdith="150px" enabled={this.props.insertPostStatus!==QUERY_LIFECYCLE_SENT} handleEvent={()=>this.handleEvent({event:"submit"})}/>
 								</li>
 								<li>
-									<CompButton value="Cancel" wdith="150px" handleEvent={()=>this.handleEvent({event:"cancel"})}/>
+									<CompButton value="Cancel" wdith="150px" enabled={this.props.insertPostStatus!==QUERY_LIFECYCLE_SENT} handleEvent={()=>this.handleEvent({event:"cancel"})}/>
 								</li>
 							</ol>
 						</div>
@@ -77,12 +79,20 @@ const mapStateToProps = (state) =>{
 	console.log("LoginWidget: mapStateToProps: check the state here");
 	console.log(state)
 	return {
-		currentScreenID: state.screenContext.screenID,
-		nextScreenID:state.screenContext.nextScreenID,
-		loginInfoObj:state.loginContext.loginInfoObj,
-		loginStatus:state.loginContext.loginStatus,
-		panelVisible:state.screenContext.panelNewPostEntryProps.visible
+		currentScreenID 		: state.screenContext.screenID,
+		nextScreenID 			: state.screenContext.nextScreenID,
+		loginInfoObj 			: state.loginContext.loginInfoObj,
+		loginStatus 			: state.loginContext.loginStatus,
+
+		/*panelVisible 		:state.screenContext.panelNewPostEntryProps.visible,*/
+
+		discussionID 			: state.screenContext.discussionID,
+		currentPostID			: state.screenContext.currentPostID,
+		currentDocType 			: state.screenContext.currentDocType,
+		insertPostStatus 		: state.postModel.insertPostStatus,
+		insertPostStatusMsg 	: state.postModel.insertPostStatusMsg,
+
 	}
 }
 
-export default connect(mapStateToProps,{ changeScreen, panelNewPostEntry})(PostCreatorWidget)
+export default connect(mapStateToProps,{ changeScreen, panelNewPostEntry, submitPost})(PostCreatorWidget)

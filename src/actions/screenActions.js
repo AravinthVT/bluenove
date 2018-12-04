@@ -1,10 +1,10 @@
 import {SCREEN_CHANGED, PANEL_NEW_POST_ENTRY_PROP_CHANGE} from "./types"
-import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN, } from "../utils/ScreenIDs"
+import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN, SCREEN_ID_DISCUSSION } from "../utils/ScreenIDs"
 
 export function changeScreen(aScreenId, config={}){
 	console.log("CHK: changeScreen: entry aScreenId:"+aScreenId);
 	console.log(config);
-	const screenNeededAuth=[SCREEN_ID_CREATE_NEW_DISCUSSION];
+	const screenNeededAuth=[SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_DISCUSSION];
 	const __payload={
 		...config,
 		screenID:aScreenId,
@@ -32,6 +32,8 @@ export function changeScreen(aScreenId, config={}){
 		dispatch({type:SCREEN_CHANGED, payload:__payload});
 	}
 }
+
+
 
 export function panelNewPostEntry(config={}){
 	console.log("CHK: changeScreen: entry");

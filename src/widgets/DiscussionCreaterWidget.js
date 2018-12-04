@@ -18,7 +18,6 @@ class DiscussionCreaterWidget extends BaseComponent{
 	constructor(props){
 		super(props);
 		//props={controller:null,mainModel:null};
-
 		this.state = {
 			title:"",
 			titleErrorMessage:"",

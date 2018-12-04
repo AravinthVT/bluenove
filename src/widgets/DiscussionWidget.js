@@ -9,8 +9,9 @@ import CompVoter from "../components/CompVoter"
 import CompButton from "../components/CompButton"
 import lineSep from "../images/lineSep3.svg"
 import { changeScreen, panelNewPostEntry } from "../actions/screenActions"
-
-import { SCREEN_ID_DISCUSSION} from "../utils/ScreenIDs"
+import { deleteDiscussion } from "../actions/postActions"
+import { SCREEN_ID_DISCUSSION, SCREEN_ID_HOME} from "../utils/ScreenIDs"
+import { QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED } from "../utils/QueryLifeCycle"
 
 
 export class DiscussionWidget extends BaseComponent {
@@ -25,6 +26,9 @@ export class DiscussionWidget extends BaseComponent {
 		}, depth:2};
 		this.state={height:"200px"}
 		this.handleEvent = this.handleEvent.bind(this);
+		this.getDeleteBtnVisibility = this.getDeleteBtnVisibility.bind(this);
+		this.getReplyBtnVisibility  = this.getReplyBtnVisibility.bind(this);
+
 	}
 
 	getModel(){
@@ -52,15 +56,48 @@ export class DiscussionWidget extends BaseComponent {
 			case ComponentEvent.CLICK:
 				console.log("Selected from DiscussionWidget");
 				//this.props.handleEvent(aEvent)
-				this.props.changeScreen(SCREEN_ID_DISCUSSION, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id});
+				this.props.changeScreen(SCREEN_ID_DISCUSSION, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id, currentDocType:"discussion"});
 				break;
 			case "reply":
-				this.props.changeScreen(SCREEN_ID_DISCUSSION, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id});
+				this.props.changeScreen(SCREEN_ID_DISCUSSION, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id, currentDocType:"discussion"});
 				this.props.panelNewPostEntry({visible:true});
+				break;
+			case "delete":
+				this.props.deleteDiscussion(this.props.model._id);
 				break;
 			default:
 				throw Error("unknown event:"+aEvent.event)
 		}
+	}
+
+	shouldComponentUpdate(nextProp, nextState){
+		if(this.props.deleteDiscussionStatus == QUERY_LIFECYCLE_SUCCESS){
+			this.props.changeScreen(SCREEN_ID_HOME, {loginInfoObj:this.props.loginInfoObj, discussionID:this.props.model._id, currentDocType:"discussion"});
+		}
+		if(this.props.deleteDiscussionStatus == QUERY_LIFECYCLE_FAILED){
+			alert("Failed to delete the discussion");
+		}
+		return true
+	}
+
+
+	//--------------------------------- helper methods ------------------------------------------------
+	getReplyBtnVisibility(){
+		if(this.props.displayType !== "expanded"){
+				return "visible"
+		}
+		return "hidden"
+	}
+
+	getDeleteBtnVisibility(){
+		if(this.props.loginInfoObj){
+			if(this.props.loginInfoObj._id == this.props.model.creatorId
+				//&& this.props.displayType !== "expanded"
+				){
+				return "visible"
+			}
+		}
+		return "hidden"
 	}
 
 	getClassName(id){
@@ -117,10 +154,11 @@ export class DiscussionWidget extends BaseComponent {
 		            	<li>
 			            	<div className="discussionWidgetReply">
 				        		<ol>
-					            	<li>replies: 0</li>
+					            	<li>replies: {l_model.childIds.length}</li>
 				        			<li>Share</li>
 					            	<li>Report</li>
-					            	<li><a href="#" onClick={()=>{this.handleEvent({event:"reply",value:null})}}>Reply</a></li>
+					            	<li><a href="#" onClick={()=>{this.handleEvent({event:"reply",value:null})}} style={{visibility:this.getReplyBtnVisibility()}}>Reply</a></li>
+					            	<li><a href="#" onClick={()=>{this.handleEvent({event:"delete",value:null})}} style={{visibility:this.getDeleteBtnVisibility()}}>Delete</a></li>
 				        		</ol>
 				        	</div>
 		            	</li>
@@ -143,8 +181,10 @@ const mapStateToProps = (state) =>{
 		currentScreenID: state.screenContext.screenID,
 		nextScreenID:state.screenContext.nextScreenID,
 		loginInfoObj:state.loginContext.loginInfoObj,
-		loginStatus:state.loginContext.loginStatus
+		loginStatus:state.loginContext.loginStatus,
+		deleteDiscussionStatus:state.postModel.deleteDiscussionStatus
+
 	}
 }
 
-export default connect(mapStateToProps,{ changeScreen, panelNewPostEntry})(DiscussionWidget)
+export default connect(mapStateToProps,{ changeScreen, panelNewPostEntry, deleteDiscussion})(DiscussionWidget)

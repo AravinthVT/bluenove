@@ -1,15 +1,16 @@
 .PostWidget{
 	display: inline-block;
 	float: left;
-	margin: 10px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
 	width: 100%;
+	background-color:lightgrey;
 }
 
 .postWidgetVoteContainer{
 	display: inline-block;
 	float: left;
 	height: 100%;
-	background-color: wheat;
+	/*background-color: wheat;*/
 }
 
 .postWidgetCountContainer{

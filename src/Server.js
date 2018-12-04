@@ -54,7 +54,7 @@ async function fetchHomePageDescription(res){
 					let userFetchPromise = new Promise((userResolve, userReject)=>{
 						getUserById(discussion.creatorId).then((user)=>{
 							//console.log("----- setting user name ")
-							__discussion.userName=user.user_name;
+							__discussion.userName=user.userName;
 							userResolve(__discussion);
 						})
 					})
@@ -119,7 +119,7 @@ async function getUserById(userId){
 }
 
 async function createNewDiscussion(req, res){
-	console.log("----------- createNewDiscussion()");
+	console.log("--------------------------------- createNewDiscussion()");
 	const __req = req;
 	const __res = res;
 	let __client = null;
@@ -165,10 +165,10 @@ async function createNewDiscussion(req, res){
 			}
 			let db = client.db("bluenove");
 			console.log("About to insertOne document")
-			console.log(newDoc);
+			//console.log(newDoc);
 			let doc = db.collection("test").insertOne(newDoc);
 			console.log("inserted reply");
-			console.log(newDoc);
+			//console.log(newDoc);
 			//resolve({doc:doc,client:client, res:res});
 			resolve(newDoc);
 		})
@@ -187,8 +187,47 @@ async function createNewDiscussion(req, res){
 
 	let result=await promise;
 	console.log("return result");
+	console.log("--------------------------------- createNewDiscussion() end");
 	return result
 };
+
+
+async function deleteDiscussion(req, res){
+	let deleteResult = await __deleteDiscussion(req.params.discussionId);
+	res.json(deleteResult);
+}
+
+async function __deleteDiscussion(aDiscussionId){
+	const __responseJson = {deleteStatus:"init"}
+	let promise = new Promise((resolve, reject)=>{
+		let connectObj = MongoClient.connect(url, (err, client)=>{
+			console.log("\nMongoClient connected "+ aDiscussionId);
+			if(err) {
+				console.log("TODO: deleteDiscussion: error accessing to me notified");
+				resolve(__responseJson);
+				return;
+			}
+			let db = client.db("bluenove");
+			console.log("About to delete Post document id:"+aDiscussionId);
+			db.collection("test").deleteOne({_id:ObjectId(aDiscussionId)}).then((discussionDeleteResult)=>{
+				console.log("Success inserting the POST document");
+				console.log(discussionDeleteResult);
+				__responseJson.deleteStatus = "failed";
+				if(discussionDeleteResult.deletedCount==1){
+					//__responseJson.insertId = discussionDeleteResult.insertedId;
+					__responseJson.deleteStatus = "success";
+				}
+				resolve(__responseJson);
+			}).catch((err)=>{
+				console.log("Failed to inserting the POST document");
+				console.log(err)
+				//reject(__responseJson);
+			})
+			client.close();
+		})//MongoClient
+	})
+	return promise;
+}
 
 async function __insertNewPost(creatorId, parentId, content, parentType){
 	console.log("__insertNewPost: ");
@@ -415,7 +454,7 @@ async function fetchDiscussionByID(req, res){
 
 	//insert_status => success, requires_login
 	/*let __returnObj={
-		user_name:null
+		userName:null
 	}*/
 
 
@@ -445,7 +484,7 @@ async function fetchDiscussionByID(req, res){
 				getUserById(foundDoc.creatorId).then((user)=>{
 					__curDoc = {
 						...__curDoc,
-						user_name:user.user_name
+						userName:user.userName
 					}
 					resolve(__curDoc)
 				}).catch((err)=>{
@@ -461,7 +500,7 @@ async function fetchDiscussionByID(req, res){
 	//const __user = await getUserById(__curDoc.creatorId);
 	/*result = {
 		...result,
-		user_name:__user.user_name
+		userName:__user.userName
 	}
 	*/
 	__res.json(__curDoc);
@@ -508,7 +547,7 @@ async function login(req, res){
 
 			let cursor = null;
 			//5bfdd2141c9d440000681a3e
-			db.collection("users").findOne({user_name:req.params.username, password:req.params.password}).then((value)=>{
+			db.collection("users").findOne({userName:req.params.username, password:req.params.password}).then((value)=>{
 				console.log("dont know the value");
 				console.log(value);
 				if(value){
@@ -565,10 +604,18 @@ app.get("/login/username/:username/password/:password/",(req,res)=>{
 //user-id/${aUserId}/create-new-post/title/${aTitle}/description/${aDescription}
 //http://localhost:3001/create-new-post/user-id/5bff02541c9d440000c0732b/title/title%20111/description/content%20111/tags/TODO-tag
 app.get("/create-new-discussion/userid/:creatorId/title/:title/description/:description/tags/:tags",(req,res)=>{
-	console.log(req.params)
+	//console.log(req.params)
 	//res.send("TODO creating new discussions "+ req.params);
 	createNewDiscussion(req, res);
 })
+
+//delete a discussion
+app.get("/delete-discussion/discussionId/:discussionId",(req,res)=>{
+	//console.log(req.params)
+	//res.send("TODO creating new discussions "+ req.params);
+	deleteDiscussion(req, res);
+})
+
 
 //`http://localhost:3001/create-new-post/userid/${aLoginInfoObj._id}/content/${aContent}/parentId/${aParentDiscussionId}
 //create-new-post/userid/${config.loginInfoObj._id}/content/${aContent}/parentId/${config.parentDiscussionId}
@@ -588,6 +635,8 @@ app.get("/discussions/:discussionsID/userid/:currentUserID",(req,res)=>{
 	//res.send("TODO creating new discussions "+ req.params);
 	fetchDiscussionByID(req, res);
 })
+
+
 
 
 app.get("/post/:postID}", (req,res)=>{
