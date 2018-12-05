@@ -75,6 +75,12 @@ class DiscussionExpandedWidget extends BaseComponent{
 	render(){
 		console.log("this.props.currentDiscussion");
 		console.log(this.props.currentDiscussion);
+		if(this.props.expandDiscussionStatus == QUERY_LIFECYCLE_SENT){
+				return <div>loading..</div>	
+		}
+		if(this.props.expandDiscussionStatus == QUERY_LIFECYCLE_FAILED){
+				return <div>Sorry couldn't load the content try after some time...</div>	
+		}
 		return <div className="DiscussionExpandedWidget">
 			<ol>
 				<li>
@@ -103,7 +109,8 @@ const mapStateToProps = (state) =>{
 		discussionID 	: state.screenContext.discussionID,
 		currentDiscussion: state.discussionExpandedContext.currentDiscussion,
 		allChildPosts	: state.discussionExpandedContext.allChildPosts,
-		insertPostStatus 		: state.postModel.insertPostStatus
+		expandDiscussionStatus : state.postModel.expandDiscussionStatus,
+		insertPostStatus 	: state.postModel.insertPostStatus
 
 	}
 }

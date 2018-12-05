@@ -5,7 +5,7 @@ import ComponentEvent from "../utils/ComponentEvent"
 import {connect } from "react-redux"
 import {changeScreen} from "../actions/screenActions"
 import {logout} from "../actions/loginActions"
-import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN} from "../utils/ScreenIDs"
+import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN, SCREEN_ID_STAT} from "../utils/ScreenIDs"
 
 class NavBar extends Component{
 	constructor(props){
@@ -44,6 +44,8 @@ class NavBar extends Component{
             <li className ="navBarMenu" onClick={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE, value:SCREEN_ID_HOME})}><div className="navBarMenu">HOME</div></li>
             <li>|</li>
             <li className ="navBarMenu" onClick={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE, value:SCREEN_ID_CREATE_NEW_DISCUSSION})}><div className="navBarMenu">NEW DISCUSSION</div></li>
+            <li>|</li>
+            <li className ="navBarMenu" onClick={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE, value:SCREEN_ID_STAT})}><div className="navBarMenu">STAT</div></li>
             <li>|</li>
             <li><SearchBar/></li>
             <li>|</li>

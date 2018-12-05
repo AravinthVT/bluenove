@@ -5,13 +5,16 @@ import {FETCH_POSTS,
 	LOGIN_SUCCESS, 
 	LOGIN_FAILED, 
 	EXPAND_DISCUSSION,
-	DELETE_DISCUSSION} from "./types"
+	DELETE_DISCUSSION,
+	FETCH_STAT} from "./types"
 
 import {QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED} from "../utils/QueryLifeCycle"
 
+export const __url="http://localhost:3001"
+
 export function fetchPosts(){
 	return function(dispatch){
-		const aUrl ="http://localhost:3001/discussions"
+		const aUrl =__url+"/discussions"
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
@@ -43,7 +46,7 @@ export function createNewDiscussion(aUserId, aTitle, aDescription, aTags){
 		description:aDescription
 	}
 	return function(dispatch){
-		const aUrl =`http://localhost:3001/create-new-discussion/userid/${aUserId}/title/${encodeURIComponent(aTitle)}/description/${encodeURIComponent(aDescription)}/tags/${encodeURIComponent(aTags)}`
+		const aUrl =`${__url}/create-new-discussion/userid/${aUserId}/title/${encodeURIComponent(aTitle)}/description/${encodeURIComponent(aDescription)}/tags/${encodeURIComponent(aTags)}`
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
@@ -74,7 +77,8 @@ export function createNewDiscussion(aUserId, aTitle, aDescription, aTags){
 //this is to create new discussion
 export function deleteDiscussion(aDiscussionId){
 	return function(dispatch){
-		const aUrl =`http://localhost:3001/delete-discussion/discussionId/${aDiscussionId}`
+		dispatch({type:DELETE_DISCUSSION, payload:{deleteDiscussionStatus: QUERY_LIFECYCLE_SENT}});
+		const aUrl =`${__url}/delete-discussion/discussionId/${aDiscussionId}`
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
@@ -92,10 +96,14 @@ export function deleteDiscussion(aDiscussionId){
 			console.log("CHK: createNewDiscussion: Successfully update the discussions data");
 			console.log(data);
 			if(data && data.deleteStatus=="success"){
+				dispatch({type:DELETE_DISCUSSION, payload:{...data, deleteDiscussionStatus: QUERY_LIFECYCLE_SUCCESS}});
+				dispatch({type:DELETE_DISCUSSION, payload:{...data, deleteDiscussionStatus: QUERY_LIFECYCLE_IDLE}});
 			//dispatch({type:DELETE_DISCUSSION, payload:{status:"success", data:data}});
 			//dispatch({type:DELETE_DISCUSSION, payload:{status:"init", data:data}});
 				return data;
 			}else{
+				dispatch({type:DELETE_DISCUSSION, payload:{...data, deleteDiscussionStatus: QUERY_LIFECYCLE_FAILED}});
+				dispatch({type:DELETE_DISCUSSION, payload:{...data, deleteDiscussionStatus: QUERY_LIFECYCLE_IDLE}});
 				throw new Error("Problem deleting")
 			}
 		}).catch((err)=>{
@@ -123,7 +131,7 @@ export function submitPost(userId, aContent, aParentDiscussionId, aParentType){
 	//}
 	
 	return function(dispatch){
-		const aUrl =`http://localhost:3001/create-new-post/userid/${userId}/content/${aContent}/parentId/${aParentDiscussionId}/parentType/${aParentType}`
+		const aUrl =`${__url}/create-new-post/userid/${userId}/content/${encodeURIComponent(aContent)}/parentId/${encodeURIComponent(aParentDiscussionId)}/parentType/${encodeURIComponent(aParentType)}`
 		dispatch({type:INSERT_POST, payload:{insertStatus:QUERY_LIFECYCLE_SENT}});
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
@@ -185,21 +193,30 @@ function getAllPosts(aDiscussion, aDepth=0){
 export function fetchDiscussionByID(aID, aLoginInfoObj){
 	console.log("------------fetchDiscussionByID");
 	return function(dispatch){
-		const aUrl =`http://localhost:3001/discussions/${aID}/userid/${aLoginInfoObj?aLoginInfoObj._id:-1}`
+		dispatch({type:EXPAND_DISCUSSION, payload:{status:QUERY_LIFECYCLE_SENT, currentDiscussion:null, data:null, allChildPosts:[]}});
+		const aUrl =`${__url}/discussions/${aID}/userid/${aLoginInfoObj?aLoginInfoObj._id:-1}`
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
 			if(response.status== "200"){
 				console.log("Successfully update the discussions");
 				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
+				return response.json();
 			}else{
 				console.log("TODO handle status issue:"+response.status);
+				return null;
 			}
-			return response.json();
+			
 		}).then((data)=>{
 			console.log("CHK: fetchPosts: Successfully update the discussions data");
 			console.log(data);
-			dispatch({type:EXPAND_DISCUSSION, payload:{currentDiscussion:data, data:data, allChildPosts:getAllPosts(data)}});
+			if(data){
+				dispatch({type:EXPAND_DISCUSSION, payload:{status: QUERY_LIFECYCLE_SUCCESS, currentDiscussion:data, data:data, allChildPosts:getAllPosts(data)}});
+				dispatch({type:EXPAND_DISCUSSION, payload:{status: QUERY_LIFECYCLE_IDLE, currentDiscussion:data, data:data, allChildPosts:getAllPosts(data)}});
+			}else{
+				dispatch({type:EXPAND_DISCUSSION, payload:{status: QUERY_LIFECYCLE_FAILED, currentDiscussion:data, data:data, allChildPosts:getAllPosts(data)}});
+				dispatch({type:EXPAND_DISCUSSION, payload:{status: QUERY_LIFECYCLE_IDLE, currentDiscussion:data, data:data, allChildPosts:getAllPosts(data)}});
+			}
 			return data;
 		}).catch((err)=>{
 			console.log("CHK: fetchPosts: Could load discussion"+err);
@@ -210,7 +227,7 @@ export function fetchDiscussionByID(aID, aLoginInfoObj){
 
 export function fetchPostById(aID, aLoginInfoObj, parentArray){
 	return function(dispatch){
-		const aUrl =`http://localhost:3001/post/${aID}`
+		const aUrl =`${__url}/post/${aID}`
 		fetch(aUrl).then((response)=>{
 			console.log("Successfully response");
 			console.log(response);
@@ -226,6 +243,41 @@ export function fetchPostById(aID, aLoginInfoObj, parentArray){
 			console.log(data);
 			//dispatch({type:FETCH_POSTS, payload:data.discussions});
 			return data;
+		}).catch((err)=>{
+			console.log("CHK: fetchPosts: Could load discussion"+err);
+			throw err
+		})
+	}
+}
+
+export function fetchStats(aID, aLoginInfoObj){
+	console.log("------------fetchStats");
+	return function(dispatch){
+		dispatch({type:FETCH_STAT, payload:{queryLifeCycleStatus:QUERY_LIFECYCLE_SENT, totalDiscussions:null, totalPosts:null, totalUsers:null}});
+		const aUrl =`${__url}/stat`
+		fetch(aUrl).then((response)=>{
+			console.log("Successfully response");
+			console.log(response);
+			if(response.status== "200"){
+				console.log("Successfully update the discussions");
+				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
+				return response.json();
+			}else{
+				console.log("TODO handle status issue:"+response.status);
+				return null;
+			}
+			
+		}).then((statData)=>{
+			console.log("CHK: fetchPosts: Successfully update the discussions statData");
+			console.log(statData);
+			if(statData){
+				dispatch({type:FETCH_STAT, payload:{queryLifeCycleStatus: QUERY_LIFECYCLE_SUCCESS, totalDiscussions:statData.totalDiscussions, totalPosts:statData.totalPosts, totalUsers:statData.totalUsers}});
+				dispatch({type:FETCH_STAT, payload:{queryLifeCycleStatus: QUERY_LIFECYCLE_IDLE}});
+			}else{
+				dispatch({type:FETCH_STAT, payload:{queryLifeCycleStatus: QUERY_LIFECYCLE_FAILED, totalDiscussions:statData.totalDiscussions, totalPosts:statData.totalPosts, totalUsers:statData.totalUsers}});
+				dispatch({type:FETCH_STAT, payload:{queryLifeCycleStatus: QUERY_LIFECYCLE_IDLE}});
+			}
+			return statData;
 		}).catch((err)=>{
 			console.log("CHK: fetchPosts: Could load discussion"+err);
 			throw err

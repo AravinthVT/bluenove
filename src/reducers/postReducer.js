@@ -5,6 +5,7 @@ const initialState = {
 	items:[],
 	item:{},
 	currentDiscussion:null,
+	expandDiscussionStatus:QUERY_LIFECYCLE_IDLE,
 	insertPostStatus:QUERY_LIFECYCLE_IDLE,
 	insertPostStatusMessage:"",
 	deleteDiscussionStatus:QUERY_LIFECYCLE_IDLE,
@@ -32,7 +33,8 @@ export default function(state=initialState, actions){
 			console.log("CHK: postReducer: reaches here EXPAND_DISCUSSION");
 			return {
 				...state,
-				status	:actions.payload.status,
+				/*status	:actions.payload.status,*/
+				expandDiscussionStatus: actions.payload.status,
 				data	:actions.payload.data,
 				currentDiscussion:actions.payload.currentDiscussion,
 				allChildPosts:actions.payload.allChildPosts

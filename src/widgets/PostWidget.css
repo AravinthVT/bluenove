@@ -94,3 +94,15 @@
 	padding: 0px 20px 5px 5px;
 	user-select: none;
 }
+
+.postWidgetCountContainer_line{
+	margin-left: 5px;
+	background-color: darkgrey;
+	width: 5px;
+	height: 100%;
+}
+
+.grid_container{
+	display:grid;
+	grid-template-rows:auto 100%;
+}

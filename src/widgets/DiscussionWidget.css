@@ -3,9 +3,23 @@
 	float: left;
 	margin: 10px 0px 0px 0px;
 	width: 100%;
+	background-color  :lightgrey;
+	border-radius 	: 5px;
+	max-height: 250px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+.DiscussionWidget_expanded{
+	display: inline-block;
+	float: left;
+	margin: 10px 0px 0px 0px;
+	width: 100%;
 	background-color:lightgrey;
 	border-radius: 5px;
 }
+
 
 .discussionWidgetVoteContainer{
 	display: inline-block;
@@ -107,6 +121,17 @@
 	/*height: 100%;*/
 	padding: 0px 5px 5px 5px;
 	user-select: none;
+}
+
+
+.discussionWidgetContentText{
+	overflow: hidden;
+	max-height:120px; 
+}
+
+.discussionWidgetContentText_expanded{
+	height: 100%;
+	overflow: none;
 }
 
 

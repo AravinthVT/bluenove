@@ -6,8 +6,9 @@ import MainPage from "../pages/MainPage"
 import DiscussionPage from "../pages/DiscussionPage"
 import DiscussionCreatorPage from "../pages/DiscussionCreatorPage"
 import LoginPage from "../pages/LoginPage"
+import StatisticsPage from "../pages/StatisticsPage"
 
-import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN, SCREEN_ID_DISCUSSION} from "../utils/ScreenIDs"
+import {SCREEN_ID_HOME, SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN, SCREEN_ID_DISCUSSION, SCREEN_ID_STAT} from "../utils/ScreenIDs"
 
 export class PageLoader extends Component {
 	constructor(props){
@@ -33,6 +34,8 @@ export class PageLoader extends Component {
 	        return (<DiscussionCreatorPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
 	      case SCREEN_ID_LOGIN:
 	       	return (<LoginPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
+	       case SCREEN_ID_STAT:
+	        return (<StatisticsPage mainModel={this.state.mainModel} handleEvent={this.handleEvent}/>)
 	      default:
 	        throw Error("unknow screen name "+this.state.currentScreenID);
 	    }

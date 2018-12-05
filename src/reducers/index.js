@@ -2,6 +2,7 @@ import { combineReducers } from "redux"
 import postReducer from "./postReducer"
 import screenReducers from "./screenReducers"
 import loginReducer from "./loginReducer"
+import statiscsReducer from "./statiscsReducer"
 
 export default combineReducers({
 	posts			: postReducer,
@@ -9,5 +10,6 @@ export default combineReducers({
 	loginContext	: loginReducer,
 	discussionCreatorContext: postReducer,
 	discussionExpandedContext:postReducer,
-	postModel		: postReducer
+	postModel		: postReducer,
+	statiscs		: statiscsReducer
 });

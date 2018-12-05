@@ -10,6 +10,7 @@ import { fetchPosts } from "../actions/postActions"
 import { changeScreen } from "../actions/screenActions"
 //import { loginAction } from "../actions/loginAction"
 import {SCREEN_ID_CREATE_NEW_DISCUSSION, SCREEN_ID_LOGIN} from "../utils/ScreenIDs"
+import { QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED } from "../utils/QueryLifeCycle"
 
 import DiscussionCreaterWidget from "../widgets/DiscussionCreaterWidget"
 import PostCreatorWidget from "../widgets/PostCreatorWidget"
@@ -65,6 +66,9 @@ export class MainPage extends BaseComponent {
 
 	shouldComponentUpdate(nextProps, nextState){
 		console.log("shouldComponentUpdate ############# "+this.props.screenContext);
+		if(this.props.deleteDiscussionStatus == QUERY_LIFECYCLE_SUCCESS){
+			this.props.fetchPosts();
+		}
 		return true;
 	}
 
@@ -101,7 +105,8 @@ const mapStateToProps = (state) =>{
 		return {
 		discussions: state.posts.items,
 		screenContext: state.screenContext,
-		loginInfoObj:state.loginContext.loginInfoObj
+		loginInfoObj:state.loginContext.loginInfoObj,
+		deleteDiscussionStatus:state.postModel.deleteDiscussionStatus
 	}
 }
 

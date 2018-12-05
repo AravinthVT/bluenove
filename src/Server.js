@@ -343,7 +343,7 @@ async function createNewPost(req, res){
 	res.json(insertRes);
 }
 
-async function createNewPost1(req, res){
+/*async function createNewPost1(req, res){
 	console.log("createNewPost")
 
 	res.json(res.params);
@@ -393,7 +393,7 @@ async function createNewPost1(req, res){
 							console.log("Failed updated the USER document id:"+__creatorID);
 							console.log(err);
 							//reject(__responseJson);
-						})*/
+						})* /
 
 					}).catch((err)=>{
 						console.log("Failed updated the DISCUSSION document id:"+__discussionDocID);
@@ -411,34 +411,11 @@ async function createNewPost1(req, res){
 		})
 		console.log("connectObjconnectObjconnectObjconnectObjconnectObj");
 		console.log(connectObj);
-		/*.then(postInsertRes=>{
-			console.log("finally================================")
-			MongoClient.connect(url, (err, client)=>{
-				console.log("\ndb connected");
-				if(err) {
-					console.log("TODO: error accessing to me notified");
-					return;
-				}
-				let db = client.db("bluenove");
-				console.log("About to insertOne Post document");
-				//updating the discussion to the childIds
-				db.collection("test").findOne({_id:ObjectId(__discussionDocID)}).then(discussionDoc=>{
-					console.log("successfully found a document with parent id:"+__discussionDocID);
-					console.log(value)
-				})
-				client.close();
-				//console.log("inserted reply");
-			}).then(value=>{
-				console.log("finally================================")
-				console.log(value);
-			})
-		})*/
 	})
 
-	//__allPromises.push(promise);
 	return promise;
-	//Promise.all(__allPromises);
-}
+}*/
+
 
 async function fetchDiscussionByID(req, res){
 	console.log("----------- fetchDiscussionByID()");
@@ -450,14 +427,36 @@ async function fetchDiscussionByID(req, res){
 
 	console.log("req.params");
 	console.log(req.params);
-	let __allPromises = [];
+	openPostConnection();
+	openUsersConnection();
+	__curDoc  = await __getDiscussionByID(__discussionID);
+	if(__curDoc == null) throw new Error("doc not found");
+	__userDoc = await getUserById(__curDoc.creatorId);
+	console.log("__userDoc");
+	console.log(__userDoc);
+	__curDoc = {
+		...__curDoc,
+		userName:__userDoc.userName,
+		childPosts:[]
+	}
+	if(__curDoc.childIds && __curDoc.childIds.length>=0){
+			let len = __curDoc.childIds.length;
+			for(let i=0; i<len;i++){
+				__curDoc.childPosts.push(await fetchPostTreeById(__curDoc.childIds[i]));
+			}
+	}
+	closePostConnection();
+	closeUsersConnection();
+	console.log(__curDoc);
+	res.json(__curDoc);
+	return __curDoc
+}
+//-------------------------------------------------------------------
 
-	//insert_status => success, requires_login
-	/*let __returnObj={
-		userName:null
-	}*/
-
-
+async function __getDiscussionByID(aId){
+	console.log("----------- __getDiscussionByID()");
+	let __client = null;
+	let __discussionID = aId;
 	let promise = new Promise((resolve, reject)=>{
 		MongoClient.connect(url, (err, client)=>{
 			console.log("\ndb connected");
@@ -470,59 +469,180 @@ async function fetchDiscussionByID(req, res){
 			console.log("About to findOne document for id:"+__discussionID);
 			db.collection("test").findOne({_id:ObjectId(__discussionID)}).then((foundDoc)=>{
 				console.log("** found a match for __discussionID:"+__discussionID);
-				console.log(foundDoc);
-				__curDoc = foundDoc;
-				foundDoc.childPosts=[];
-				if(foundDoc.childIds && foundDoc.childIds.length>0){
-					let count=0;
-					foundDoc.childIds.forEach((childPostId)=>{
-						console.log("############# child post id"+childPostId);
-						let postPromise = fetchPostById(childPostId, db, __curDoc.childPosts, count++);
-						__allPromises.push(postPromise);
-					})
-				}
-				getUserById(foundDoc.creatorId).then((user)=>{
-					__curDoc = {
-						...__curDoc,
-						userName:user.userName
-					}
-					resolve(__curDoc)
-				}).catch((err)=>{
-					console.log("TODO fetchDiscussionByID handle user failure case:"+err);
-				})
+				//console.log(foundDoc);
+				__client.close()
+				resolve(foundDoc);
 			}).catch((err)=>{
 				console.log("!! Couldnt found a match for __discussionID:"+__discussionID);
+				__client.close()
+				reject(err);
 			})
 		})
 	})
-	__allPromises.push(promise);
-	let result = await Promise.all(__allPromises);
-	//const __user = await getUserById(__curDoc.creatorId);
-	/*result = {
-		...result,
-		userName:__user.userName
-	}
-	*/
-	__res.json(__curDoc);
-	__client.close();
-	console.log("return result");
-	return result
+	return promise
 }
 
-async function fetchPostById(aId, db, aParentList, aIndex=0, depth){
+async function __getPostById(aId, depth){
+	let promise = new Promise((resolve,reject)=>{
+		getPosts().findOne({_id:ObjectId(aId)}).then((postDoc)=>{
+			console.log("\t__getPostById: ==================== aId:"+aId);
+			resolve(postDoc);
+		}).catch((err)=>{
+			reject(null);
+		})
+	})
+	return promise;
+}
+//----------------------------------------------------------------------------------
+
+let __discussionsClient =null;
+let __discussionsDb     =null;
+let __discussionsColl   =null;
+function openDiscussionsConnection(){
+		let promise = new Promise((resolve, reject)=>{
+			MongoClient.connect(url, (err, client)=>{
+				console.log("\ndb connected");
+				if(err) {
+					console.log("TODO: error accessing to me notified");
+					resolve(false);
+				}
+				__discussionsClient = client;
+				__discussionsDb     = client.db("bluenove");
+				__discussionsColl   = __discussionsDb.collection("test");
+				let size = __discussionsColl.find().count();
+				console.log("size::"+size);
+				resolve(true);
+			})
+		})
+	return promise
+}
+
+function getDiscussions(){
+	return __discussionsColl;
+}
+
+async function closeDiscussionsConnection(){
+	if(__discussionsClient) __discussionsClient.close();
+		__discussionsClient = null;
+		__discussionsDb     = null;
+		__discussionsColl   = null;
+}
+
+//--------------------------------------------------------------------------------
+let __postClient =null;
+let __postDb     =null;
+let __postColl   =null;
+async function openPostConnection(){
+		let promise = new Promise((resolve, reject)=>{
+			MongoClient.connect(url, (err, client)=>{
+				console.log("\ndb connected");
+				if(err) {
+					console.log("TODO: error accessing to me notified");
+					resolve(false);
+				}
+				__postClient = client;
+				__postDb     = client.db("bluenove");
+				__postColl   = __postDb.collection("posts");
+				resolve(true);
+			})
+		})
+	return promise
+}
+
+function getPosts(){
+	return __postColl;
+}
+
+async function closePostConnection(){
+	if(__postClient) __postClient.close();
+		__postClient = null;
+		__postDb     = null;
+		__postColl   = null;
+}
+
+//----------------------------------------------------------------------------------
+
+let __userClient =null;
+let __userDb     =null;
+let __userColl   =null;
+async function openUsersConnection(){
+		let promise = new Promise((resolve, reject)=>{
+			MongoClient.connect(url, (err, client)=>{
+				console.log("\ndb connected");
+				if(err) {
+					console.log("TODO: error accessing to me notified");
+					resolve(false);
+				}
+				__userClient = client;
+				__userDb     = client.db("bluenove");
+				__userColl   = __userDb.collection("users");
+				resolve(true);
+			})
+		})
+	return promise
+}
+
+function getUsers(){
+	return __userColl;
+}
+
+async function closeUsersConnection(){
+	if(__userClient) __userClient.close();
+		__userClient = null;
+		__userDb     = null;
+		__userColl   = null;
+}
+
+async function openAllConnections(){
+	await openDiscussionsConnection();
+	await openUsersConnection();
+	await openPostConnection();
+	return true;
+}
+
+function closeAllConnections(){
+	closeDiscussionsConnection();
+	closePostConnection();
+	closeUsersConnection();
+}
+
+//----------------------------------------------------------------------------------
+
+
+
+async function fetchPostTreeById(aId, depth){
+	console.log("fetchPostTreeById: ==================== ")
+	let postDoc = await __getPostById(aId, depth);
+	let __userDoc = await getUserById(postDoc.creatorId);
+	postDoc.userName = __userDoc.userName;
+	console.log(postDoc);
+	if(postDoc){
+		if(postDoc.childIds && postDoc.childIds.length>0){
+			postDoc.childPosts		= [];
+			postDoc.depth 			= depth;
+			for(let i=0; i<postDoc.childIds.length;i++){
+				childPostDoc = await fetchPostTreeById(aId, postDoc.childPosts, i, depth+1);
+				postDoc.childPosts.push(childPostDoc);
+			}
+		}
+	}
+	return postDoc;
+}
+
+/*async function fetchPostTreeById22(aId, db, aParentList, aIndex=0, depth){
 	let __allPromises=[];
 	let promise = new Promise((resolve,reject)=>{
 		db.collection("posts").findOne({_id:ObjectId(aId)}).then((postDoc)=>{
-			console.log("fetchPostById: ==================== ")
+			console.log("fetchPostTreeById: ==================== ")
 			aParentList[aIndex]=postDoc;
 			let __curPostDoc = postDoc;
 			if(postDoc.childIds && postDoc.childIds.length>0){
-				console.log("fetchPostById:  ############# has a child");
+				console.log("fetchPostTreeById:  ############# has a child");
 				__curPostDoc.childPosts = [];
 				let count=0;
 				postDoc.childIds.forEach((childPostId)=>{
-					console.log("fetchPostById:  ############# child post id"+childPostId);
-					let postPromise = fetchPostById(childPostId, db, __curPostDoc.childPosts, count++);
+					console.log("fetchPostTreeById:  ############# child post id"+childPostId);
+					let postPromise = fetchPostTreeById(childPostId, db, __curPostDoc.childPosts, count++);
 					__allPromises.push(postPromise);
 				})
 			}
@@ -531,7 +651,9 @@ async function fetchPostById(aId, db, aParentList, aIndex=0, depth){
 	})
 	__allPromises.push(promise);
 	return Promise.all(__allPromises);
-}
+}*/
+
+//------------------------------------------------------------------
 
 async function login(req, res){
 	console.log("inside login method")
@@ -571,6 +693,23 @@ async function login(req, res){
 	let result=await promise;
 	console.log("return result");
 	return result
+}
+
+async function fetchStat(req, res){
+	const result={
+		totalDiscussions:null,
+		totalPosts:null,
+		totalUsers:null
+	}
+	await openAllConnections();
+	console.log("getPosts()");
+	result.totalDiscussions = await getDiscussions().find().count().then(data=>data),
+	result.totalPosts = await getPosts().find().count().then(data=>data);
+	result.totalUsers = await getUsers().find().count().then(data=>data);
+	
+	console.log(result);
+	closeAllConnections();
+	res.json(result);
 }
 
 //------------------------------- routes -------------------------
@@ -639,11 +778,19 @@ app.get("/discussions/:discussionsID/userid/:currentUserID",(req,res)=>{
 
 
 
-app.get("/post/:postID}", (req,res)=>{
+app.get("/post/:postID", (req,res)=>{
 	console.log("TODO yet to handle post by id");
 	console.log(req.params)
 	//res.send("TODO creating new discussions "+ req.params);
 	//fetchDiscussionByID(req, res);
+})
+
+
+app.get("/stat", (req,res)=>{
+	console.log("------------------- Requestion for stat --------------");
+	console.log(req.params)
+	//res.send("TODO creating new discussions "+ req.params);
+	fetchStat(req, res);
 })
 
 //`http://localhost:3001/discussions/${aID}/userid/${aLoginInfoObj._id}`

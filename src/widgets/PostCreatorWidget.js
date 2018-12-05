@@ -42,8 +42,15 @@ export class PostCreatorWidget extends BaseComponent {
 		this.setState({content:aEvent.target.value});
 	}
 
+	shouldComponentUpdate(nextProp, nextState){
+		if(this.props.insertPostStatus==QUERY_LIFECYCLE_SUCCESS){
+			nextState.content ="";
+		}
+		return true;
+	}
+
 	render() {
-		if(this.props.panelVisible==false) return null;	
+		if(this.props.visible==false) return null;	
 		return (
 			<div className="PostCreatorWidget">
 				<ol>
@@ -90,7 +97,7 @@ const mapStateToProps = (state) =>{
 		currentPostID			: state.screenContext.currentPostID,
 		currentDocType 			: state.screenContext.currentDocType,
 		insertPostStatus 		: state.postModel.insertPostStatus,
-		insertPostStatusMsg 	: state.postModel.insertPostStatusMsg,
+		insertPostStatusMsg 	: state.postModel.insertPostStatusMsg
 
 	}
 }

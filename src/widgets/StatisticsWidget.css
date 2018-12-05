@@ -1,0 +1,37 @@
+.StatisticsWidget{
+	display: inline-block;
+	width: 60%;
+	background-color: white;
+	padding: 5px;
+	border-radius: 5px;
+}
+
+.StatisticsWidgetTitle{
+	background-color: purple;
+}
+
+.statisticsWidgetGrid{
+	display: grid;
+	grid-template-columns: 40% auto;
+	text-align: left;
+	grid-gap: 5px;
+}
+
+.statisticsWidgetGridLabel{
+	background-color: pink;
+	color: black;
+	font-size: 18px;
+	padding: 5px;
+}
+
+
+.statisticsWidgetGridValue{
+	background-color: lightgrey;
+	color: black;
+	font-size: 18px;
+	padding: 5px;
+}
+
+.statisticsWidgetLoading{
+	color:darkgrey;
+}

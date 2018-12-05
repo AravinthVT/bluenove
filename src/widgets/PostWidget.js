@@ -47,18 +47,21 @@ export class PostWidget extends BaseComponent {
 		console.log(l_model);
 		if(l_model==null) return null;
 		let l_depth =l_model.depth;
+		//<div style={{backgroundImage:lineSep}}>
+		//<div className="postWidgetVoteContainer">
+		//</div>
 		return (
-			<div className="PostWidget">
-				<div className="postWidgetVoteContainer">
-					<div className="postWidgetCountContainer">
-		             	<CompPostDepth level={l_depth}/>
-	              	</div>
-					<div className="postWidgetCountContainer">
-		             	<CompVoter handleEvent={this.handleEvent}/>
-		             	<div style={{backgroundImage:lineSep}}>
-	              		</div>
-	              	</div>
-	            </div>
+			<div className="PostWidget" style=
+    {{display: "grid",
+    gridTemplateColumns: "20px 20px auto"}}>
+				<div className="postWidgetCountContainer">
+	             	<CompPostDepth level={l_depth}/>
+              	</div>
+				<div className="postWidgetCountContainer grid_container">
+	             	<CompVoter handleEvent={this.handleEvent}/>
+	             	<div className="postWidgetCountContainer_line">
+              		</div>
+              	</div>
 	            <div className="postWidgetInfoContainer" >
 	            	<ol>
 		            	<li>

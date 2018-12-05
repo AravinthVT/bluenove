@@ -24,6 +24,7 @@ export class DiscussionWidget extends BaseComponent {
 			createdDate:"new Date()",
 			content:"default content"
 		}, depth:2};
+
 		this.state={height:"200px"}
 		this.handleEvent = this.handleEvent.bind(this);
 		this.getDeleteBtnVisibility = this.getDeleteBtnVisibility.bind(this);
@@ -110,6 +111,20 @@ export class DiscussionWidget extends BaseComponent {
 					__result =  "discussionWidgetTitle";
 				}
 				break;
+			case "topWidget":
+				if(this.props.displayType == "expanded"){
+					__result = "DiscussionWidget_expanded";
+				}else{
+					__result = "DiscussionWidget";
+				}
+				break;
+			case "content":
+				if(this.props.displayType == "expanded"){
+					__result = "discussionWidgetContentText_expanded";
+				}else{
+					__result = "discussionWidgetContentText";
+				}
+				break;
 			default:
 				throw new Error("getClassName: unkown id type:"+id);
 		}
@@ -124,15 +139,14 @@ export class DiscussionWidget extends BaseComponent {
 		if(l_model==null) return null;
 		return (
 			//style={{height:this.state.height}}
-			<div className="DiscussionWidget" >
+			<div className= {this.getClassName("topWidget")}>
 				<div className="discussionWidgetVoteContainer">
 					<div className="discussionWidgetCountContainer">
 		             	<CompPostDepth level={l_depth}/>
 	              	</div>
 					<div className="discussionWidgetCountContainer">
 		             	<CompVoter handleEvent={this.handleEvent}/>
-		             	<div style={{backgroundImage:lineSep}}>
-	              		</div>
+		             	<div style={{backgroundImage:lineSep}}></div>
 	              	</div>
 	            </div>
 	            <div className="discussionWidgetInfoContainer" >
@@ -149,7 +163,7 @@ export class DiscussionWidget extends BaseComponent {
 		            	{l_model.title}
 		            	</li>
 		            	<li className="discussionWidgetContent"  onClick={()=>this.handleEvent({event:ComponentEvent.CLICK})}>
-		            	<div>{l_model.description}</div>
+		            		<div className={this.getClassName("content")}>{l_model.description}</div>
 		            	</li>
 		            	<li>
 			            	<div className="discussionWidgetReply">
