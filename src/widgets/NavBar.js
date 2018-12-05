@@ -45,7 +45,7 @@ class NavBar extends Component{
             <li>|</li>
             <li className ="navBarMenu" onClick={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE, value:SCREEN_ID_CREATE_NEW_DISCUSSION})}><div className="navBarMenu">NEW DISCUSSION</div></li>
             <li>|</li>
-            <li className ="navBarMenu" onClick={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE, value:SCREEN_ID_STAT})}><div className="navBarMenu">STAT</div></li>
+            <li className ="navBarMenu" onClick={()=>this.handleEvent({type:ComponentEvent.SCREEN_CHANGE, value:SCREEN_ID_STAT})}><div className="navBarMenu">STATS</div></li>
             <li>|</li>
             <li><SearchBar/></li>
             <li>|</li>
