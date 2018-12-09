@@ -1,4 +1,4 @@
-import {FETCH_POSTS, NEW_DISCUSSION, NEW_POSTS, INSERT_POST, LOGIN_SUCCESS, LOGIN_FAILED, EXPAND_DISCUSSION, DELETE_DISCUSSION} from "../actions/types"
+import {FETCH_POSTS, NEW_DISCUSSION, NEW_POSTS, INSERT_POST, LOGIN_SUCCESS, LOGIN_FAILED, EXPAND_DISCUSSION, DELETE_DISCUSSION, DELETE_POST} from "../actions/types"
 import {QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED} from "../utils/QueryLifeCycle"
 
 const initialState = {
@@ -10,6 +10,8 @@ const initialState = {
 	insertPostStatusMessage:"",
 	deleteDiscussionStatus:QUERY_LIFECYCLE_IDLE,
 	deleteDiscussionMessage:"",
+	deletePostStatus:QUERY_LIFECYCLE_IDLE,
+	deletePostMessage:""
 }
 
 export default function(state=initialState, actions){
@@ -52,6 +54,13 @@ export default function(state=initialState, actions){
 				...state,
 				deleteDiscussionStatus		:actions.payload.deleteDiscussionStatus,
 				deleteDiscussionMessage 	:actions.payload.deleteDiscussionMessage
+			}
+		case DELETE_POST:
+			console.log("CHK: postReducer: reaches here DELETE_POST");
+			return{
+				...state,
+				deletePostStatus	:actions.payload.deletePostStatus,
+				deletePostMessage 	:actions.payload.deletePostMessage
 			}
 		/*case LOGIN_SUCCESS:
 			return {

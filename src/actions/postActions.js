@@ -6,6 +6,7 @@ import {FETCH_POSTS,
 	LOGIN_FAILED, 
 	EXPAND_DISCUSSION,
 	DELETE_DISCUSSION,
+	DELETE_POST,
 	FETCH_STAT} from "./types"
 
 import {QUERY_LIFECYCLE_IDLE, QUERY_LIFECYCLE_SENT, QUERY_LIFECYCLE_SUCCESS, QUERY_LIFECYCLE_FAILED} from "../utils/QueryLifeCycle"
@@ -285,3 +286,44 @@ export function fetchStats(aID, aLoginInfoObj){
 	}
 }
 
+
+//this is to create new post
+export function deletePost(aPostId){
+	console.log("CHK: deletePost: aPostId:"+aPostId);
+	return function(dispatch){
+		dispatch({type:DELETE_POST, payload:{deletePostStatus: QUERY_LIFECYCLE_SENT}});
+		const aUrl =`${__url}/delete-post/postId/${aPostId}`
+		fetch(aUrl).then((response)=>{
+			console.log("Successfully response");
+			console.log(response);
+			if(response.status== "200"){
+				console.log("deletePost: Successfully got a response");
+				return response.json();
+				//aEvent.target.handleEvent({event:ModelEvent.LOAD_HOME_DISCUSSIONS_COMPLETE, value:{}});
+			}else{
+				console.log("deletePost: Failed to get a response");
+				console.log("TODO handle status issue:"+response.status);
+				//alert("Couldnt create the new post");
+				return null;
+			}
+		}).then((data)=>{
+			console.log("CHK: createNewPost: Successfully update the posts data");
+			console.log(data);
+			if(data && data.deleteStatus=="success"){
+				dispatch({type:DELETE_POST, payload:{...data, deletePostStatus: QUERY_LIFECYCLE_SUCCESS}});
+				dispatch({type:DELETE_POST, payload:{...data, deletePostStatus: QUERY_LIFECYCLE_IDLE}});
+				return data;
+			}else{
+				dispatch({type:DELETE_POST, payload:{...data, deletePostStatus: QUERY_LIFECYCLE_FAILED}});
+				dispatch({type:DELETE_POST, payload:{...data, deletePostStatus: QUERY_LIFECYCLE_IDLE}});
+				//throw new Error("Problem deleting");
+				return data;
+			}
+		}).catch((err)=>{
+			console.log("CHK: createNewPost: create the new post "+err);
+			//dispatch({type:DELETE_POST, payload:{status:"failed", data:null}});
+			//dispatch({type:DELETE_POST, payload:{status:"init", data:null}});
+			throw err
+		})
+	}
+}

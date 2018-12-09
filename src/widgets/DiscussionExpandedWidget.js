@@ -54,6 +54,9 @@ class DiscussionExpandedWidget extends BaseComponent{
 		if(this.props.insertPostStatus == QUERY_LIFECYCLE_SUCCESS){
 			this.props.fetchDiscussionByID(this.props.discussionID, this.props.loginInfoObj);
 		}
+		if(this.props.deletePostStatus == QUERY_LIFECYCLE_SUCCESS){
+			this.props.fetchDiscussionByID(this.props.discussionID, this.props.loginInfoObj);
+		}
 		return true
 	}
 
@@ -79,7 +82,7 @@ class DiscussionExpandedWidget extends BaseComponent{
 				return <div>loading..</div>	
 		}
 		if(this.props.expandDiscussionStatus == QUERY_LIFECYCLE_FAILED){
-				return <div>Sorry couldn't load the content try after some time...</div>	
+				return (<div>Sorry couldn't load the content try after some time...</div>)	
 		}
 		return <div className="DiscussionExpandedWidget">
 			<ol>
